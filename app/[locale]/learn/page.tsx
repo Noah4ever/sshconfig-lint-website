@@ -43,7 +43,7 @@ export default async function LearnPage({ params }: { params: Promise<{ locale: 
     description: text.description,
     url: `${origin}/${locale}/learn`,
     inLanguage: locale,
-    timeRequired: 'PT15M',
+    timeRequired: 'PT20M',
     educationalLevel: 'Beginner',
     learningResourceType: ['Lesson', 'Exercise'],
     isAccessibleForFree: true,
@@ -110,6 +110,7 @@ export default async function LearnPage({ params }: { params: Promise<{ locale: 
       <div className="learning-actions">
         <a className="button" href={`/${locale}#playground`}>{text.checkerCta}<ArrowRight aria-hidden="true" size={20} /></a>
         <a className="learning-rule-link" href={`/${locale}/rules`}>{text.rulesCta}<ArrowRight aria-hidden="true" size={20} /></a>
+        <a className="learning-rule-link" href={`/${locale}/learn/classroom`}>{locale === 'de' ? 'Arbeitsblatt drucken' : locale === 'fr' ? 'Imprimer la fiche' : locale === 'es' ? 'Imprimir la hoja' : 'Print classroom worksheet'}<ArrowRight aria-hidden="true" size={20} /></a>
       </div>
 
       <nav className="learning-languages" aria-label={text.languageLabel}>

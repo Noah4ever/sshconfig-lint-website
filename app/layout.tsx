@@ -26,23 +26,35 @@ export const metadata: Metadata = {
   },
 };
 
-const websiteJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  '@id': `${origin}/#website`,
-  url: origin,
-  name: 'sshconfig-lint',
-  alternateName: 'SSH Config Linter',
-  description: 'A free browser-based SSH config linter and OpenSSH configuration checker.',
-  inLanguage: ['en', 'de', 'fr', 'es'],
-  publisher: { '@type': 'Person', name: 'Noah Thiering', url: 'https://thiering.org' },
-  about: {
-    '@type': 'SoftwareSourceCode',
+const websiteJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${origin}/#website`,
+    url: origin,
     name: 'sshconfig-lint',
+    alternateName: 'SSH Config Linter',
+    description: 'A free browser-based SSH config linter and OpenSSH configuration checker.',
+    inLanguage: ['en', 'de', 'fr', 'es'],
+    publisher: { '@type': 'Person', name: 'Noah Thiering', url: 'https://thiering.org' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${origin}/#software`,
+    name: 'sshconfig-lint',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: ['Linux', 'macOS', 'Windows', 'Web'],
+    url: origin,
+    downloadUrl: 'https://github.com/Noah4ever/sshconfig-lint/releases',
+    softwareHelp: `${origin}/en/rules`,
     codeRepository: 'https://github.com/Noah4ever/sshconfig-lint',
     programmingLanguage: 'Rust',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    author: { '@type': 'Person', name: 'Noah Thiering', url: 'https://thiering.org' },
   },
-};
+];
 
 export default function RootLayout({
   children,

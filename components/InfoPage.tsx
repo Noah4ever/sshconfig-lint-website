@@ -26,6 +26,9 @@ export function InfoPage({ children, eyebrow = 'sshconfig-lint', locale, title }
               learn: text.nav.learn,
               menu: text.primaryNavigation,
               rules: text.nav.checks,
+              editor: text.nav.editor,
+              ci: text.nav.ci,
+              guides: text.nav.guides,
             }}
           />
         </div>

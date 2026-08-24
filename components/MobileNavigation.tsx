@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, Github, Languages, ListChecks, Menu, SquareTerminal, TerminalSquare, X } from 'lucide-react';
+import { BookOpen, Github, Languages, ListChecks, Menu, MonitorCheck, SquareTerminal, TerminalSquare, Workflow, X } from 'lucide-react';
 import { useRef } from 'react';
 import { locales, type Locale } from '../lib/i18n';
 
@@ -14,6 +14,9 @@ type MobileNavigationProps = {
     learn: string;
     menu: string;
     rules: string;
+    editor: string;
+    ci: string;
+    guides: string;
   };
   locale: Locale;
 };
@@ -44,6 +47,9 @@ export function MobileNavigation({ labels, locale }: MobileNavigationProps) {
           <a href={`/${locale}#playground`} onClick={closeMenu}><TerminalSquare aria-hidden="true" size={22} />{labels.checker}</a>
           <a href={`/${locale}/learn`} onClick={closeMenu}><BookOpen aria-hidden="true" size={22} />{labels.learn}</a>
           <a href={`/${locale}/rules`} onClick={closeMenu}><ListChecks aria-hidden="true" size={22} />{labels.rules}</a>
+          <a href={`/${locale}/guides`} onClick={closeMenu}><BookOpen aria-hidden="true" size={22} />{labels.guides}</a>
+          <a href={`/${locale}/editor`} onClick={closeMenu}><MonitorCheck aria-hidden="true" size={22} />{labels.editor}</a>
+          <a href={`/${locale}/ci`} onClick={closeMenu}><Workflow aria-hidden="true" size={22} />{labels.ci}</a>
           <a href={`/${locale}#install`} onClick={closeMenu}><SquareTerminal aria-hidden="true" size={22} />{labels.cli}</a>
           <a href={repository} rel="noreferrer" onClick={closeMenu}><Github aria-hidden="true" size={22} />{labels.github}</a>
         </nav>

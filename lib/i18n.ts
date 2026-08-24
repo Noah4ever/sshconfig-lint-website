@@ -15,7 +15,7 @@ export type Copy = {
   legalNavigation: string;
   languageMenu: string;
   packageManagers: string;
-  nav: { playground: string; checks: string; learn: string; cli: string; github: string };
+  nav: { playground: string; checks: string; learn: string; cli: string; github: string; editor: string; ci: string; guides: string };
   eyebrow: string;
   title: string;
   intro: string;
@@ -77,7 +77,7 @@ export const copy: Record<Locale, Copy> = {
   en: {
     languageName: 'English',
     skipToContent: 'Skip to main content', darkMode: 'Use dark mode', lightMode: 'Use light mode', githubStars: '{count} GitHub stars', primaryNavigation: 'Primary navigation', legalNavigation: 'Legal and project links', languageMenu: 'Choose language', packageManagers: 'Choose a package manager',
-    nav: { playground: 'Checker', checks: 'What it checks', learn: 'Learn', cli: 'CLI', github: 'GitHub' },
+    nav: { playground: 'Checker', checks: 'What it checks', learn: 'Learn', cli: 'CLI', github: 'GitHub', editor: 'Editor', ci: 'CI workflows', guides: 'Guides' },
     eyebrow: 'Free OpenSSH client config checker',
     title: 'An SSH config linter that finds what SSH does not mention.',
     intro: 'Paste or open your ~/.ssh/config. This free SSH config checker catches duplicate hosts, unsafe options, weak algorithms, and ordering mistakes before they waste your time.',
@@ -123,7 +123,7 @@ export const copy: Record<Locale, Copy> = {
     browserColumn: 'In this browser',
     browserItems: ['No installation', 'No upload', 'Six content-based rules', 'Works on phones and desktops'],
     cliColumn: 'With sshconfig-lint',
-    cliItems: ['Nested Include resolution', 'Include cycle detection', 'IdentityFile existence checks', 'Stable text and JSON output'],
+    cliItems: ['Nested Include resolution', 'IdentityFile existence checks', 'Text, JSON, SARIF, and GitHub output', 'Language server for editors'],
     installTitle: 'Use the complete linter',
     installText: 'Install it with Homebrew, Cargo, AUR, or a prebuilt binary.',
     copyCommand: 'Copy command',
@@ -176,7 +176,7 @@ export const copy: Record<Locale, Copy> = {
   de: {
     languageName: 'Deutsch',
     skipToContent: 'Zum Hauptinhalt springen', darkMode: 'Dunkles Farbschema verwenden', lightMode: 'Helles Farbschema verwenden', githubStars: '{count} GitHub-Sterne', primaryNavigation: 'Hauptnavigation', legalNavigation: 'Rechtliches und Projektlinks', languageMenu: 'Sprache auswählen', packageManagers: 'Paketmanager auswählen',
-    nav: { playground: 'Prüfen', checks: 'Prüfungen', learn: 'Lernen', cli: 'CLI', github: 'GitHub' },
+    nav: { playground: 'Prüfen', checks: 'Prüfungen', learn: 'Lernen', cli: 'CLI', github: 'GitHub', editor: 'Editor', ci: 'CI-Workflows', guides: 'Anleitungen' },
     eyebrow: 'Kostenloser OpenSSH-Config-Checker',
     title: 'Ein SSH-Config-Linter, der findet, was SSH nicht erwähnt.',
     intro: 'Füge deine ~/.ssh/config ein oder öffne eine Datei. Dieser kostenlose SSH-Config-Checker findet doppelte Hosts, unsichere Optionen, schwache Algorithmen und problematische Reihenfolgen.',
@@ -205,7 +205,7 @@ export const copy: Record<Locale, Copy> = {
     cliEyebrow: 'BROWSER UND CLI', cliTitle: 'Die schnelle Prüfung hier. Die vollständige Prüfung auf deinem Rechner.',
     cliIntro: 'Die Website gibt sofortiges Feedback. Die quelloffene CLI folgt Include-Dateien, erkennt Zyklen und prüft lokale Pfade.',
     browserColumn: 'In diesem Browser', browserItems: ['Keine Installation', 'Kein Upload', 'Sechs inhaltsbasierte Regeln', 'Auf Smartphone und Desktop nutzbar'],
-    cliColumn: 'Mit sshconfig-lint', cliItems: ['Verschachtelte Includes', 'Erkennung von Include-Zyklen', 'Prüfung von IdentityFile-Pfaden', 'Stabile Text- und JSON-Ausgabe'],
+    cliColumn: 'Mit sshconfig-lint', cliItems: ['Verschachtelte Includes', 'Prüfung von IdentityFile-Pfaden', 'Text, JSON, SARIF und GitHub-Ausgabe', 'Language Server für Editoren'],
     installTitle: 'Nutze den vollständigen Linter', installText: 'Installiere ihn mit Homebrew, Cargo, AUR oder als fertiges Binary.',
     copyCommand: 'Befehl kopieren', githubCta: 'Projekt auf GitHub ansehen', footerLine: 'Open Source. Keine Cookies. Kein Tracking.',
     privacy: 'Datenschutz', legal: 'Impressum', source: 'Quellcode',
@@ -239,7 +239,7 @@ export const copy: Record<Locale, Copy> = {
     },
   },
   fr: {
-    languageName: 'Français', skipToContent: 'Aller au contenu principal', darkMode: 'Utiliser le thème sombre', lightMode: 'Utiliser le thème clair', githubStars: '{count} étoiles GitHub', primaryNavigation: 'Navigation principale', legalNavigation: 'Liens juridiques et du projet', languageMenu: 'Choisir la langue', packageManagers: 'Choisir un gestionnaire de paquets', nav: { playground: 'Vérifier', checks: 'Contrôles', learn: 'Apprendre', cli: 'CLI', github: 'GitHub' },
+    languageName: 'Français', skipToContent: 'Aller au contenu principal', darkMode: 'Utiliser le thème sombre', lightMode: 'Utiliser le thème clair', githubStars: '{count} étoiles GitHub', primaryNavigation: 'Navigation principale', legalNavigation: 'Liens juridiques et du projet', languageMenu: 'Choisir la langue', packageManagers: 'Choisir un gestionnaire de paquets', nav: { playground: 'Vérifier', checks: 'Contrôles', learn: 'Apprendre', cli: 'CLI', github: 'GitHub', editor: 'Éditeur', ci: 'Workflows CI', guides: 'Guides' },
     eyebrow: 'Vérificateur OpenSSH gratuit', title: "Un linter de configuration SSH qui repère ce que SSH ne signale pas.",
     intro: 'Collez votre ~/.ssh/config ou ouvrez un fichier. Ce vérificateur SSH gratuit repère les hôtes dupliqués, les options risquées, les algorithmes faibles et les problèmes d’ordre.',
     privateNote: 'Aucun contenu ne quitte ce navigateur.', localCheck: 'TRAITÉ DANS CE NAVIGATEUR', configLabel: 'COLLER OU OUVRIR LA CONFIGURATION',
@@ -263,7 +263,7 @@ export const copy: Record<Locale, Copy> = {
     cliEyebrow: 'NAVIGATEUR ET CLI', cliTitle: 'Un contrôle rapide ici. Le contrôle complet sur votre machine.',
     cliIntro: 'Le site donne un retour immédiat. La CLI open source suit les Include, détecte les cycles et vérifie les chemins locaux.',
     browserColumn: 'Dans ce navigateur', browserItems: ['Aucune installation', 'Aucun envoi', 'Six règles textuelles', 'Mobile et ordinateur'],
-    cliColumn: 'Avec sshconfig-lint', cliItems: ['Résolution des Include imbriqués', 'Détection des cycles', 'Vérification des IdentityFile', 'Sortie texte et JSON stable'],
+    cliColumn: 'Avec sshconfig-lint', cliItems: ['Résolution des Include imbriqués', 'Vérification des IdentityFile', 'Sorties texte, JSON, SARIF et GitHub', 'Serveur de langage pour éditeurs'],
     installTitle: 'Utiliser le linter complet', installText: 'Installez-le avec Homebrew, Cargo, AUR ou un binaire précompilé.', copyCommand: 'Copier la commande',
     githubCta: 'Voir le projet sur GitHub', footerLine: 'Open source. Aucun cookie. Aucun suivi.', privacy: 'Confidentialité', legal: 'Mentions légales', source: 'Code source',
     privacyTitle: 'La confidentialité sans bannière', privacyBody: [
@@ -287,7 +287,7 @@ export const copy: Record<Locale, Copy> = {
     },
   },
   es: {
-    languageName: 'Español', skipToContent: 'Saltar al contenido principal', darkMode: 'Usar el tema oscuro', lightMode: 'Usar el tema claro', githubStars: '{count} estrellas en GitHub', primaryNavigation: 'Navegación principal', legalNavigation: 'Enlaces legales y del proyecto', languageMenu: 'Elegir idioma', packageManagers: 'Elegir un gestor de paquetes', nav: { playground: 'Comprobar', checks: 'Comprobaciones', learn: 'Aprender', cli: 'CLI', github: 'GitHub' },
+    languageName: 'Español', skipToContent: 'Saltar al contenido principal', darkMode: 'Usar el tema oscuro', lightMode: 'Usar el tema claro', githubStars: '{count} estrellas en GitHub', primaryNavigation: 'Navegación principal', legalNavigation: 'Enlaces legales y del proyecto', languageMenu: 'Elegir idioma', packageManagers: 'Elegir un gestor de paquetes', nav: { playground: 'Comprobar', checks: 'Comprobaciones', learn: 'Aprender', cli: 'CLI', github: 'GitHub', editor: 'Editor', ci: 'Workflows CI', guides: 'Guías' },
     eyebrow: 'Comprobador OpenSSH gratuito', title: 'Un linter de configuración SSH que encuentra lo que SSH no menciona.',
     intro: 'Pega tu ~/.ssh/config o abre un archivo. Este comprobador SSH gratuito detecta hosts duplicados, opciones inseguras, algoritmos débiles y problemas de orden.',
     privateNote: 'Nada se sube. La comprobación permanece en este navegador.', localCheck: 'PROCESADO EN ESTE NAVEGADOR', configLabel: 'PEGA O ABRE TU CONFIGURACIÓN',
@@ -311,7 +311,7 @@ export const copy: Record<Locale, Copy> = {
     cliEyebrow: 'NAVEGADOR Y CLI', cliTitle: 'Una comprobación rápida aquí. La completa en tu equipo.',
     cliIntro: 'La web ofrece información inmediata. La CLI de código abierto sigue Include, detecta ciclos y comprueba rutas locales.',
     browserColumn: 'En este navegador', browserItems: ['Sin instalación', 'Sin subidas', 'Seis reglas de contenido', 'Móvil y escritorio'],
-    cliColumn: 'Con sshconfig-lint', cliItems: ['Resolución de Include anidados', 'Detección de ciclos', 'Comprobación de IdentityFile', 'Salida estable en texto y JSON'],
+    cliColumn: 'Con sshconfig-lint', cliItems: ['Resolución de Include anidados', 'Comprobación de IdentityFile', 'Salida en texto, JSON, SARIF y GitHub', 'Servidor de lenguaje para editores'],
     installTitle: 'Usa el linter completo', installText: 'Instálalo con Homebrew, Cargo, AUR o un binario precompilado.', copyCommand: 'Copiar comando',
     githubCta: 'Ver el proyecto en GitHub', footerLine: 'Código abierto. Sin cookies. Sin rastreo.', privacy: 'Privacidad', legal: 'Aviso legal', source: 'Código fuente',
     privacyTitle: 'Privacidad sin banner', privacyBody: [

@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github } from 'lucide-react';
+import { ArrowUpRight, BookOpen, Github, MonitorCheck, Workflow } from 'lucide-react';
 import { GitHubStars } from './GitHubStars';
 import { InstallChooser } from './InstallChooser';
 import { Playground } from './Playground';
@@ -8,6 +8,12 @@ import { MobileNavigation } from './MobileNavigation';
 import { ThemeToggle } from './ThemeToggle';
 
 const repository = 'https://github.com/Noah4ever/sshconfig-lint';
+const workflowCopy = {
+  en: { title: 'The same checks wherever the config changes.', editor: 'Editor diagnostics', ci: 'GitHub Action and Pre-Commit', guides: 'Practical SSH guides' },
+  de: { title: 'Dieselben Prüfungen überall, wo sich die Config ändert.', editor: 'Diagnosen im Editor', ci: 'GitHub Action und Pre-Commit', guides: 'Praktische SSH-Anleitungen' },
+  fr: { title: 'Les mêmes contrôles partout où la configuration change.', editor: 'Diagnostics dans l’éditeur', ci: 'Action GitHub et Pre-Commit', guides: 'Guides SSH pratiques' },
+  es: { title: 'Las mismas comprobaciones donde cambie la configuración.', editor: 'Diagnósticos en el editor', ci: 'GitHub Action y Pre-Commit', guides: 'Guías SSH prácticas' },
+};
 
 export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
   const text = copy[locale];
@@ -35,6 +41,9 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
               learn: text.nav.learn,
               menu: text.primaryNavigation,
               rules: text.nav.checks,
+              editor: text.nav.editor,
+              ci: text.nav.ci,
+              guides: text.nav.guides,
             }}
           />
           <details className="language-menu">
@@ -82,6 +91,14 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
             })}
           </div>
           <a className="all-rules-link" href={`/${locale}/rules`}>{text.allRules}<ArrowUpRight aria-hidden="true" size={21} /></a>
+          <section className="workflow-links" aria-labelledby="workflow-links-title">
+            <h2 id="workflow-links-title">{workflowCopy[locale].title}</h2>
+            <div>
+              <a href={`/${locale}/editor`}><MonitorCheck aria-hidden="true" size={24} /><span>{workflowCopy[locale].editor}</span><ArrowUpRight aria-hidden="true" size={20} /></a>
+              <a href={`/${locale}/ci`}><Workflow aria-hidden="true" size={24} /><span>{workflowCopy[locale].ci}</span><ArrowUpRight aria-hidden="true" size={20} /></a>
+              <a href={`/${locale}/guides`}><BookOpen aria-hidden="true" size={24} /><span>{workflowCopy[locale].guides}</span><ArrowUpRight aria-hidden="true" size={20} /></a>
+            </div>
+          </section>
         </section>
 
         <section className="cli-section" id="cli">

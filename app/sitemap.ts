@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { locales } from '../lib/i18n';
 import { ruleDocs } from '../lib/rules';
+import { guides } from '../lib/guides';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.apps.thiering.org';
@@ -12,7 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/rules',
     ...ruleDocs.map((rule) => `/rules/${rule.slug}`),
+    '/guides',
+    ...guides.map((guide) => `/guides/${guide.slug}`),
     '/learn',
+    '/learn/classroom',
+    '/editor',
+    '/ci',
     '/privacy',
     '/legal',
   ];

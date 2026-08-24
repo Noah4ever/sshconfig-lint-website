@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, RotateCcw, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { LearningQuizCopy } from '../lib/learning';
 
 type Highlight = { line: number; target: string };
@@ -36,6 +36,28 @@ const fill = (template: string, values: Record<string, string | number>) =>
 export function LearningExercise({ brokenConfig, brokenLabel, fixedConfig, fixedLabel, highlights, quiz, solutionText, solutionTitle }: Props) {
   const [answers, setAnswers] = useState<Array<number | null>>(() => quiz.questions.map(() => null));
   const [activeQuestion, setActiveQuestion] = useState<number | null>(null);
+  const [storageReady, setStorageReady] = useState(false);
+  const storageKey = 'sshconfig-lint-learning-v2';
+
+  useEffect(() => {
+    let savedAnswers: Array<number | null> | null = null;
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
+      if (Array.isArray(saved) && saved.length === quiz.questions.length && saved.every((answer) => answer === null || Number.isInteger(answer))) {
+        savedAnswers = saved;
+      }
+    } catch {
+      localStorage.removeItem(storageKey);
+    }
+    queueMicrotask(() => {
+      if (savedAnswers) setAnswers(savedAnswers);
+      setStorageReady(true);
+    });
+  }, [quiz.questions.length]);
+
+  useEffect(() => {
+    if (storageReady) localStorage.setItem(storageKey, JSON.stringify(answers));
+  }, [answers, storageReady]);
   const correctCount = answers.reduce<number>((count, answer, index) => count + (answer === quiz.questions[index].correct ? 1 : 0), 0);
   const completed = correctCount === quiz.questions.length;
   const activeLine = activeQuestion === null ? undefined : quiz.questions[activeQuestion].line;
@@ -49,6 +71,7 @@ export function LearningExercise({ brokenConfig, brokenLabel, fixedConfig, fixed
   const reset = () => {
     setAnswers(quiz.questions.map(() => null));
     setActiveQuestion(null);
+    localStorage.removeItem(storageKey);
   };
 
   return (

@@ -55,9 +55,9 @@ export type LearningCopy = {
 export const learningCopy: Record<Locale, LearningCopy> = {
   en: {
     eyebrow: 'SSH CONFIG BASICS',
-    title: 'Learn SSH config in 15 minutes.',
-    description: 'A short, practical introduction to Host blocks, OpenSSH matching, and safer defaults. Read the three lessons, solve the exercise, then check the result in the browser.',
-    duration: '15 minutes',
+    title: 'Learn SSH config in 20 minutes.',
+    description: 'A short, practical introduction to Host blocks, OpenSSH matching, and safer defaults. Read three lessons, find five real mistakes, then check the result in the browser.',
+    duration: '20 minutes',
     level: 'Beginner',
     format: '3 lessons and 1 exercise',
     lessonsTitle: 'Three ideas that prevent most config mistakes',
@@ -83,14 +83,14 @@ export const learningCopy: Record<Locale, LearningCopy> = {
       },
     ],
     exerciseEyebrow: 'CLASSROOM EXERCISE',
-    exerciseTitle: 'Find three problems in this config',
-    exerciseIntro: 'Answer each question. The related config line is highlighted while you work, and the corrected version unlocks after all three answers are right.',
+    exerciseTitle: 'Find five problems in this config',
+    exerciseIntro: 'Answer each question. The related config line is highlighted while you work, and the corrected version unlocks after all five answers are right. Progress is kept only in this browser.',
     quiz: {
       progress: 'Solved {correct} of {total}',
       correctLabel: 'Correct',
       wrongLabel: 'Try again',
       completeTitle: 'Config understood',
-      completeText: 'You found all three issues. Compare your reasoning with the corrected version below.',
+      completeText: 'You found all five issues. Compare your reasoning with the corrected version below.',
       reset: 'Reset exercise',
       questionLabel: 'Question {number}',
       questions: [
@@ -109,7 +109,21 @@ export const learningCopy: Record<Locale, LearningCopy> = {
           explanation: 'StrictHostKeyChecking no accepts changed host keys and removes an important defense against man-in-the-middle attacks.',
         },
         {
-          line: 9,
+          line: 5,
+          prompt: 'Why can this ControlPath collide?',
+          options: ['It omits the port and user', 'The directory is hidden', 'ControlMaster is disabled'],
+          correct: 0,
+          explanation: 'A path containing only %h cannot distinguish connections using another user or port. %C safely hashes all relevant values.',
+        },
+        {
+          line: 10,
+          prompt: 'Which algorithm should be removed?',
+          options: ['aes256-gcm@openssh.com', '3des-cbc', 'Both algorithms'],
+          correct: 1,
+          explanation: '3des-cbc is obsolete. Prefer OpenSSH defaults, or keep only the modern cipher when an explicit list is required.',
+        },
+        {
+          line: 12,
           prompt: 'What structural problem makes the config harder to reason about?',
           options: ['The Port directive is missing', 'The alias is too long', 'Host school-server is duplicated'],
           correct: 2,
@@ -130,9 +144,9 @@ export const learningCopy: Record<Locale, LearningCopy> = {
   },
   de: {
     eyebrow: 'SSH-CONFIG-GRUNDLAGEN',
-    title: 'SSH Config in 15 Minuten verstehen.',
-    description: 'Eine kurze, praktische Einführung in Host-Blöcke, die Auswertung durch OpenSSH und sichere Vorgaben. Lies die drei Lektionen, löse die Aufgabe und prüfe das Ergebnis direkt im Browser.',
-    duration: '15 Minuten',
+    title: 'SSH Config in 20 Minuten verstehen.',
+    description: 'Eine kurze, praktische Einführung in Host-Blöcke, die Auswertung durch OpenSSH und sichere Vorgaben. Lies drei Lektionen, finde fünf echte Fehler und prüfe das Ergebnis im Browser.',
+    duration: '20 Minuten',
     level: 'Einsteiger',
     format: '3 Lektionen und 1 Aufgabe',
     lessonsTitle: 'Drei Ideen, die die meisten Config-Fehler verhindern',
@@ -158,14 +172,14 @@ export const learningCopy: Record<Locale, LearningCopy> = {
       },
     ],
     exerciseEyebrow: 'UNTERRICHTSAUFGABE',
-    exerciseTitle: 'Finde drei Probleme in dieser Config',
-    exerciseIntro: 'Beantworte jede Frage. Währenddessen wird die passende Config-Zeile hervorgehoben. Nach drei richtigen Antworten erscheint die korrigierte Version.',
+    exerciseTitle: 'Finde fünf Probleme in dieser Config',
+    exerciseIntro: 'Beantworte jede Frage. Währenddessen wird die passende Config-Zeile hervorgehoben. Nach fünf richtigen Antworten erscheint die Korrektur. Dein Fortschritt bleibt nur in diesem Browser.',
     quiz: {
       progress: '{correct} von {total} gelöst',
       correctLabel: 'Richtig',
       wrongLabel: 'Noch nicht',
       completeTitle: 'Config verstanden',
-      completeText: 'Du hast alle drei Probleme gefunden. Vergleiche deine Begründung jetzt mit der korrigierten Version.',
+      completeText: 'Du hast alle fünf Probleme gefunden. Vergleiche deine Begründung jetzt mit der korrigierten Version.',
       reset: 'Aufgabe zurücksetzen',
       questionLabel: 'Frage {number}',
       questions: [
@@ -184,7 +198,21 @@ export const learningCopy: Record<Locale, LearningCopy> = {
           explanation: 'StrictHostKeyChecking no akzeptiert geänderte Host-Schlüssel und entfernt damit einen wichtigen Schutz vor Man-in-the-Middle-Angriffen.',
         },
         {
-          line: 9,
+          line: 5,
+          prompt: 'Warum kann dieser ControlPath kollidieren?',
+          options: ['Port und Benutzer fehlen', 'Das Verzeichnis ist versteckt', 'ControlMaster ist deaktiviert'],
+          correct: 0,
+          explanation: 'Ein Pfad nur mit %h unterscheidet keine Verbindungen mit anderem Benutzer oder Port. %C bildet alle relevanten Werte sicher ab.',
+        },
+        {
+          line: 10,
+          prompt: 'Welcher Algorithmus sollte entfernt werden?',
+          options: ['aes256-gcm@openssh.com', '3des-cbc', 'Beide Algorithmen'],
+          correct: 1,
+          explanation: '3des-cbc ist veraltet. Nutze möglichst die OpenSSH-Standards oder behalte nur den modernen Cipher in einer wirklich nötigen Liste.',
+        },
+        {
+          line: 12,
           prompt: 'Welches strukturelle Problem macht die Config schwer verständlich?',
           options: ['Die Port-Direktive fehlt', 'Der Alias ist zu lang', 'Host school-server ist doppelt'],
           correct: 2,
@@ -205,9 +233,9 @@ export const learningCopy: Record<Locale, LearningCopy> = {
   },
   fr: {
     eyebrow: 'BASES DE LA CONFIGURATION SSH',
-    title: 'Comprendre la configuration SSH en 15 minutes.',
-    description: 'Une introduction courte et pratique aux blocs Host, aux règles de correspondance OpenSSH et aux réglages sûrs. Lisez les trois leçons, faites l’exercice, puis vérifiez le résultat dans le navigateur.',
-    duration: '15 minutes',
+    title: 'Comprendre la configuration SSH en 20 minutes.',
+    description: 'Une introduction pratique aux blocs Host, aux règles OpenSSH et aux réglages sûrs. Lisez trois leçons, trouvez cinq erreurs réelles, puis vérifiez le résultat.',
+    duration: '20 minutes',
     level: 'Débutant',
     format: '3 leçons et 1 exercice',
     lessonsTitle: 'Trois idées qui évitent la plupart des erreurs',
@@ -233,14 +261,14 @@ export const learningCopy: Record<Locale, LearningCopy> = {
       },
     ],
     exerciseEyebrow: 'EXERCICE EN CLASSE',
-    exerciseTitle: 'Trouvez trois problèmes dans cette configuration',
-    exerciseIntro: 'Répondez à chaque question. La ligne concernée est mise en évidence et la version corrigée apparaît après trois bonnes réponses.',
+    exerciseTitle: 'Trouvez cinq problèmes dans cette configuration',
+    exerciseIntro: 'Répondez à chaque question. La ligne concernée est mise en évidence et la correction apparaît après cinq bonnes réponses. La progression reste dans ce navigateur.',
     quiz: {
       progress: '{correct} sur {total} résolus',
       correctLabel: 'Correct',
       wrongLabel: 'Réessayez',
       completeTitle: 'Configuration comprise',
-      completeText: 'Vous avez trouvé les trois problèmes. Comparez maintenant votre raisonnement avec la version corrigée.',
+      completeText: 'Vous avez trouvé les cinq problèmes. Comparez maintenant votre raisonnement avec la version corrigée.',
       reset: 'Recommencer l’exercice',
       questionLabel: 'Question {number}',
       questions: [
@@ -259,7 +287,21 @@ export const learningCopy: Record<Locale, LearningCopy> = {
           explanation: 'StrictHostKeyChecking no accepte les clés modifiées et supprime une protection importante contre les attaques de type homme du milieu.',
         },
         {
-          line: 9,
+          line: 5,
+          prompt: 'Pourquoi ce ControlPath peut-il entrer en collision ?',
+          options: ['Le port et l’utilisateur manquent', 'Le dossier est caché', 'ControlMaster est désactivé'],
+          correct: 0,
+          explanation: 'Un chemin qui contient uniquement %h ne distingue pas les connexions avec un autre port ou utilisateur. %C résume les valeurs utiles.',
+        },
+        {
+          line: 10,
+          prompt: 'Quel algorithme faut-il supprimer ?',
+          options: ['aes256-gcm@openssh.com', '3des-cbc', 'Les deux algorithmes'],
+          correct: 1,
+          explanation: '3des-cbc est obsolète. Préférez les valeurs OpenSSH par défaut ou conservez uniquement le chiffrement moderne.',
+        },
+        {
+          line: 12,
           prompt: 'Quel problème de structure complique la configuration ?',
           options: ['La directive Port manque', 'L’alias est trop long', 'Host school-server est dupliqué'],
           correct: 2,
@@ -280,9 +322,9 @@ export const learningCopy: Record<Locale, LearningCopy> = {
   },
   es: {
     eyebrow: 'FUNDAMENTOS DE SSH CONFIG',
-    title: 'Aprende SSH config en 15 minutos.',
-    description: 'Una introducción breve y práctica a los bloques Host, las coincidencias de OpenSSH y los ajustes seguros. Lee las tres lecciones, resuelve el ejercicio y comprueba el resultado en el navegador.',
-    duration: '15 minutos',
+    title: 'Aprende SSH config en 20 minutos.',
+    description: 'Una introducción práctica a los bloques Host, las coincidencias de OpenSSH y los ajustes seguros. Lee tres lecciones, encuentra cinco errores reales y comprueba el resultado.',
+    duration: '20 minutos',
     level: 'Principiante',
     format: '3 lecciones y 1 ejercicio',
     lessonsTitle: 'Tres ideas que evitan la mayoría de errores',
@@ -308,14 +350,14 @@ export const learningCopy: Record<Locale, LearningCopy> = {
       },
     ],
     exerciseEyebrow: 'EJERCICIO PARA CLASE',
-    exerciseTitle: 'Encuentra tres problemas en esta configuración',
-    exerciseIntro: 'Responde a cada pregunta. La línea relacionada se resalta mientras trabajas y la versión corregida aparece después de tres respuestas correctas.',
+    exerciseTitle: 'Encuentra cinco problemas en esta configuración',
+    exerciseIntro: 'Responde a cada pregunta. La línea relacionada se resalta y la corrección aparece tras cinco respuestas correctas. El progreso queda solo en este navegador.',
     quiz: {
       progress: '{correct} de {total} resueltos',
       correctLabel: 'Correcto',
       wrongLabel: 'Inténtalo de nuevo',
       completeTitle: 'Configuración comprendida',
-      completeText: 'Has encontrado los tres problemas. Compara ahora tu razonamiento con la versión corregida.',
+      completeText: 'Has encontrado los cinco problemas. Compara ahora tu razonamiento con la versión corregida.',
       reset: 'Reiniciar ejercicio',
       questionLabel: 'Pregunta {number}',
       questions: [
@@ -334,7 +376,21 @@ export const learningCopy: Record<Locale, LearningCopy> = {
           explanation: 'StrictHostKeyChecking no acepta claves modificadas y elimina una defensa importante contra ataques de intermediario.',
         },
         {
-          line: 9,
+          line: 5,
+          prompt: '¿Por qué puede colisionar este ControlPath?',
+          options: ['Faltan el puerto y el usuario', 'El directorio está oculto', 'ControlMaster está desactivado'],
+          correct: 0,
+          explanation: 'Una ruta que solo contiene %h no distingue conexiones con otro usuario o puerto. %C resume todos los valores relevantes.',
+        },
+        {
+          line: 10,
+          prompt: '¿Qué algoritmo debe eliminarse?',
+          options: ['aes256-gcm@openssh.com', '3des-cbc', 'Ambos algoritmos'],
+          correct: 1,
+          explanation: '3des-cbc está obsoleto. Usa los valores predeterminados de OpenSSH o conserva únicamente el cifrado moderno.',
+        },
+        {
+          line: 12,
           prompt: '¿Qué problema estructural dificulta entender la configuración?',
           options: ['Falta la directiva Port', 'El alias es demasiado largo', 'Host school-server está duplicado'],
           correct: 2,
@@ -355,12 +411,14 @@ export const learningCopy: Record<Locale, LearningCopy> = {
   },
 };
 
-export const brokenExercise = 'Host *\n  StrictHostKeyChecking no\n  User deploy\n\nHost school-server\n  HostName 203.0.113.42\n  User student\n\nHost school-server\n  IdentityFile ~/.ssh/id_ed25519';
+export const brokenExercise = 'Host *\n  StrictHostKeyChecking no\n  User deploy\n  ControlMaster auto\n  ControlPath ~/.ssh/control-%h\n\nHost school-server\n  HostName 203.0.113.42\n  User student\n  Ciphers aes256-gcm@openssh.com,3des-cbc\n\nHost school-server\n  IdentityFile ~/.ssh/id_ed25519';
 
-export const fixedExercise = 'Host school-server\n  HostName 203.0.113.42\n  User student\n  IdentityFile ~/.ssh/id_ed25519\n  StrictHostKeyChecking accept-new\n\nHost *\n  ServerAliveInterval 60';
+export const fixedExercise = 'Host school-server\n  HostName 203.0.113.42\n  User student\n  IdentityFile ~/.ssh/id_ed25519\n  StrictHostKeyChecking accept-new\n  Ciphers aes256-gcm@openssh.com\n\nHost *\n  ServerAliveInterval 60\n  ControlMaster auto\n  ControlPath ~/.ssh/control-%C';
 
 export const exerciseHighlights = [
   { line: 1, target: 'Host *' },
   { line: 2, target: 'StrictHostKeyChecking no' },
-  { line: 9, target: 'Host school-server' },
+  { line: 5, target: '~/.ssh/control-%h' },
+  { line: 10, target: '3des-cbc' },
+  { line: 12, target: 'Host school-server' },
 ];
