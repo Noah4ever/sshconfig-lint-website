@@ -18,4 +18,4 @@ docker build -t sshconfig-lint-web .
 docker run --rm -p 3000:3000 sshconfig-lint-web
 ```
 
-Set `NEXT_PUBLIC_SITE_URL` to the public HTTPS origin when using a domain other than `https://sshconfig-lint.thiering.org`.
+Set `NEXT_PUBLIC_SITE_URL` to the public HTTPS origin when using a domain other than `https://sshconfig-lint.apps.thiering.org`.

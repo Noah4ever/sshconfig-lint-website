@@ -3,7 +3,7 @@ import { locales } from '../lib/i18n';
 import { ruleDocs } from '../lib/rules';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.thiering.org';
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.apps.thiering.org';
   return locales.flatMap((locale) => [
     { url: `${origin}/${locale}`, changeFrequency: 'monthly' as const, priority: 1 },
     { url: `${origin}/${locale}/privacy`, changeFrequency: 'yearly' as const, priority: 0.2 },

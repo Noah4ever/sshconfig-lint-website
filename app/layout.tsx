@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.scss';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.thiering.org'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.apps.thiering.org'),
   title: 'sshconfig-lint',
   description:
     'Check an OpenSSH client configuration for duplicate hosts, unsafe options, weak algorithms, and ordering mistakes. Private and local in your browser.',
