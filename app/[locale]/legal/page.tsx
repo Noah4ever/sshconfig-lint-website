@@ -10,7 +10,18 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  return { title: `${copy[locale].legal} | sshconfig-lint` };
+  return {
+    title: `${copy[locale].legal} | sshconfig-lint`,
+    description: copy[locale].legalIntro,
+    alternates: {
+      canonical: `/${locale}/legal`,
+      languages: Object.fromEntries([
+        ...locales.map((item) => [item, `/${item}/legal`]),
+        ['x-default', '/en/legal'],
+      ]),
+    },
+    robots: { index: true, follow: true },
+  };
 }
 
 export default async function LegalPage({ params }: { params: Promise<{ locale: string }> }) {

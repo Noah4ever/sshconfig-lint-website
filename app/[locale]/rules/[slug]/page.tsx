@@ -5,6 +5,8 @@ import { InfoPage } from '../../../../components/InfoPage';
 import { isLocale, locales, type Locale } from '../../../../lib/i18n';
 import { ruleBySlug, ruleDocs } from '../../../../lib/rules';
 
+const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.apps.thiering.org';
+
 const labels: Record<Locale, {
   back: string; before: string; browser: string; cli: string; example: string; fix: string; fixed: string; info: string; warning: string; error: string; why: string;
 }> = {
@@ -46,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         ['x-default', `/en/rules/${slug}`],
       ]),
     },
-    openGraph: { title: `${rule.code}: ${text.title}`, description: text.summary, images: [] },
+    openGraph: { title: `${rule.code}: ${text.title}`, description: text.summary, url: `/${locale}/rules/${slug}`, images: [] },
     twitter: { title: `${rule.code}: ${text.title}`, description: text.summary, images: [] },
   };
 }
@@ -59,10 +61,20 @@ export default async function RulePage({ params }: { params: Promise<{ locale: s
   const ui = labels[locale];
   const SeverityIcon = rule.severity === 'error' ? CircleX : rule.severity === 'warning' ? AlertTriangle : Info;
   const RuntimeIcon = rule.browser ? MonitorCheck : SquareTerminal;
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'sshconfig-lint', item: `${origin}/${locale}` },
+      { '@type': 'ListItem', position: 2, name: ui.back, item: `${origin}/${locale}/rules` },
+      { '@type': 'ListItem', position: 3, name: text.title, item: `${origin}/${locale}/rules/${slug}` },
+    ],
+  };
 
   return (
     <InfoPage locale={locale} title={text.title}>
-      <a className="rule-back" href={`/${locale}#checks`}>← {ui.back}</a>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }} />
+      <a className="rule-back" href={`/${locale}/rules`}>← {ui.back}</a>
       <div className="rule-meta">
         <span><SeverityIcon aria-hidden="true" size={19} strokeWidth={2.3} />{ui[rule.severity]}</span>
         <span><RuntimeIcon aria-hidden="true" size={19} strokeWidth={2.3} />{rule.browser ? ui.browser : ui.cli}</span>

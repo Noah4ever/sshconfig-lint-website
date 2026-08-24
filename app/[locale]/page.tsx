@@ -2,14 +2,23 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SitePage } from '../../components/SitePage';
 import { githubStars } from '../../lib/github-stars.generated';
-import { copy, isLocale, locales } from '../../lib/i18n';
+import { isLocale, locales } from '../../lib/i18n';
 
 const descriptions = {
-  en: 'Check an OpenSSH client configuration for duplicate hosts, unsafe options, weak algorithms, and ordering mistakes. Private and local in your browser.',
-  de: 'Prüfe eine OpenSSH Client-Konfiguration auf doppelte Hosts, unsichere Optionen, schwache Algorithmen und problematische Reihenfolgen. Lokal im Browser.',
-  fr: 'Vérifiez une configuration client OpenSSH pour repérer les hôtes dupliqués, options risquées, algorithmes faibles et problèmes d’ordre.',
-  es: 'Comprueba una configuración cliente OpenSSH para detectar hosts duplicados, opciones inseguras, algoritmos débiles y problemas de orden.',
+  en: 'Free SSH config linter and OpenSSH checker. Find duplicate hosts, unsafe options, weak algorithms, and ordering mistakes locally in your browser.',
+  de: 'Kostenloser SSH-Config-Linter und OpenSSH-Checker. Finde doppelte Hosts, unsichere Optionen, schwache Algorithmen und Reihenfolgefehler lokal im Browser.',
+  fr: 'Linter de configuration SSH et vérificateur OpenSSH gratuit. Repérez les hôtes dupliqués, options risquées, algorithmes faibles et erreurs d’ordre.',
+  es: 'Linter de configuración SSH y comprobador OpenSSH gratuito. Detecta hosts duplicados, opciones inseguras, algoritmos débiles y errores de orden.',
 };
+
+const titles = {
+  en: 'SSH Config Linter and OpenSSH Checker | sshconfig-lint',
+  de: 'SSH-Config-Linter und OpenSSH-Checker | sshconfig-lint',
+  fr: 'Linter de configuration SSH et OpenSSH | sshconfig-lint',
+  es: 'Linter de configuración SSH y OpenSSH | sshconfig-lint',
+};
+
+const openGraphLocales = { en: 'en_US', de: 'de_DE', fr: 'fr_FR', es: 'es_ES' };
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -19,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   if (!isLocale(locale)) return {};
   return {
-    title: `${copy[locale].title} | sshconfig-lint`,
+    title: titles[locale],
     description: descriptions[locale],
     alternates: {
       canonical: `/${locale}`,
@@ -28,7 +37,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         ['x-default', '/en'],
       ]),
     },
-    openGraph: { title: `sshconfig-lint | ${copy[locale].title}`, description: descriptions[locale], locale },
+    openGraph: {
+      title: titles[locale],
+      description: descriptions[locale],
+      locale: openGraphLocales[locale],
+      alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
+      url: `/${locale}`,
+    },
+    twitter: { title: titles[locale], description: descriptions[locale] },
   };
 }
 

@@ -15,6 +15,7 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  poweredByHeader: false,
   async headers() {
     const pageCache = [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' }];
     return [

@@ -1,8 +1,8 @@
-import { ArrowUpRight, Github, Star } from 'lucide-react';
+import { ArrowUpRight, Github } from 'lucide-react';
+import { GitHubStars } from './GitHubStars';
 import { InstallChooser } from './InstallChooser';
 import { Playground } from './Playground';
 import { copy, locales, type Locale } from '../lib/i18n';
-import { interpolate } from '../lib/interpolate';
 import { ruleByCode } from '../lib/rules';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -43,10 +43,7 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
             <p className="intro">{text.intro}</p>
             <div className="hero-notes">
               <p className="privacy-note">{text.privateNote}</p>
-              <a className="star-count" href={`${repository}/stargazers`} aria-label={interpolate(text.githubStars, { count: stars })}>
-                <Star aria-hidden="true" size={19} fill="currentColor" />
-                {interpolate(text.githubStars, { count: stars })}
-              </a>
+              <GitHubStars initialStars={stars} label={text.githubStars} locale={locale} />
             </div>
           </div>
           <Playground copy={text} locale={locale} />
