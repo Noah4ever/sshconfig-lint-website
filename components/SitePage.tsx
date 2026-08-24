@@ -4,6 +4,7 @@ import { InstallChooser } from './InstallChooser';
 import { Playground } from './Playground';
 import { copy, locales, type Locale } from '../lib/i18n';
 import { ruleByCode } from '../lib/rules';
+import { MobileNavigation } from './MobileNavigation';
 import { ThemeToggle } from './ThemeToggle';
 
 const repository = 'https://github.com/Noah4ever/sshconfig-lint';
@@ -23,6 +24,19 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
           <a href="#cli">{text.nav.cli}</a>
           <a className="nav-with-icon" href={repository} rel="noreferrer"><Github aria-hidden="true" size={19} />{text.nav.github}</a>
           <ThemeToggle darkLabel={text.darkMode} lightLabel={text.lightMode} />
+          <MobileNavigation
+            locale={locale}
+            labels={{
+              checker: text.nav.playground,
+              cli: text.nav.cli,
+              github: text.nav.github,
+              language: text.languageMenu,
+              languages: Object.fromEntries(locales.map((option) => [option, copy[option].languageName])) as Record<Locale, string>,
+              learn: text.nav.learn,
+              menu: text.primaryNavigation,
+              rules: text.nav.checks,
+            }}
+          />
           <details className="language-menu">
             <summary aria-label={`${text.languageMenu}: ${text.languageName}`}>{locale.toUpperCase()}</summary>
             <div className="language-options">

@@ -177,6 +177,70 @@ button:focus-visible, a:focus-visible, summary:focus-visible, textarea:focus-vis
 .language-options a + a { border-top: 2px solid $ink; }
 .language-options a:hover, .language-options a[aria-current="page"] { background: $accent; color: #191a1b; }
 
+.mobile-menu { display: none; position: relative; }
+.mobile-menu > summary {
+  align-items: center;
+  background: $ink;
+  border: 2px solid $ink;
+  color: $paper;
+  cursor: pointer;
+  display: inline-flex;
+  height: 46px;
+  justify-content: center;
+  list-style: none;
+  width: 46px;
+}
+.mobile-menu > summary::-webkit-details-marker { display: none; }
+.mobile-menu-close { display: none; }
+.mobile-menu[open] .mobile-menu-open { display: none; }
+.mobile-menu[open] .mobile-menu-close { display: block; }
+.mobile-menu-panel {
+  background: $paper-bright;
+  border: 3px solid $ink;
+  box-shadow: 7px 7px 0 $ink;
+  color: $ink;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  width: min(360px, calc(100vw - 32px));
+  z-index: 30;
+}
+.mobile-menu-links { display: grid; }
+.mobile-menu-links a {
+  align-items: center;
+  display: grid;
+  font-size: 19px;
+  font-weight: 800;
+  gap: 13px;
+  grid-template-columns: 25px 1fr;
+  min-height: 52px;
+  padding: 11px 12px;
+  text-decoration: none;
+}
+.mobile-menu-links a + a { border-top: 2px solid $ink; }
+.mobile-menu-links a:hover, .mobile-menu-links a:focus-visible { background: $accent; color: #191a1b; }
+.mobile-menu-languages {
+  align-items: center;
+  border-top: 3px solid $ink;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 28px repeat(4, 1fr);
+  margin-top: 8px;
+  padding: 12px 7px 2px;
+}
+.mobile-menu-languages a {
+  align-items: center;
+  display: inline-flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 38px;
+  text-decoration: none;
+}
+.mobile-menu-languages a:hover, .mobile-menu-languages a[aria-current="page"] { background: $accent; color: #191a1b; }
+
 .page-shell, .content-section, .site-footer, .info-page {
   margin: 0 auto;
   max-width: 1240px;
@@ -718,6 +782,10 @@ h1 {
 
 @media (max-width: 960px) {
   .site-nav > a { display: none; }
+  .site-nav, .header-actions { gap: 12px; }
+  .language-menu { display: none; }
+  .mobile-menu { display: block; }
+  .header-actions > .header-link { display: none; }
   .terminal-grid { grid-template-columns: 1fr; height: auto; }
   .editor-pane { height: 620px; }
   .result-pane { border-left: 0; border-top: 2px solid #55575a; max-height: 590px; }
