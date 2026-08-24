@@ -44,7 +44,7 @@ export function MobileNavigation({ labels, locale }: MobileNavigationProps) {
           <a href={`/${locale}#playground`} onClick={closeMenu}><TerminalSquare aria-hidden="true" size={22} />{labels.checker}</a>
           <a href={`/${locale}/learn`} onClick={closeMenu}><BookOpen aria-hidden="true" size={22} />{labels.learn}</a>
           <a href={`/${locale}/rules`} onClick={closeMenu}><ListChecks aria-hidden="true" size={22} />{labels.rules}</a>
-          <a href={`/${locale}#cli`} onClick={closeMenu}><SquareTerminal aria-hidden="true" size={22} />{labels.cli}</a>
+          <a href={`/${locale}#install`} onClick={closeMenu}><SquareTerminal aria-hidden="true" size={22} />{labels.cli}</a>
           <a href={repository} rel="noreferrer" onClick={closeMenu}><Github aria-hidden="true" size={22} />{labels.github}</a>
         </nav>
         <div className="mobile-menu-languages" role="group" aria-label={labels.language}>

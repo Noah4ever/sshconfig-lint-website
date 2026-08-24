@@ -21,7 +21,7 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
           <a href="#playground">{text.nav.playground}</a>
           <a href="#checks">{text.nav.checks}</a>
           <a href={`/${locale}/learn`}>{text.nav.learn}</a>
-          <a href="#cli">{text.nav.cli}</a>
+          <a href="#install">{text.nav.cli}</a>
           <a className="nav-with-icon" href={repository} rel="noreferrer"><Github aria-hidden="true" size={19} />{text.nav.github}</a>
           <ThemeToggle darkLabel={text.darkMode} lightLabel={text.lightMode} />
           <MobileNavigation
@@ -95,7 +95,7 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
               <div><h3>{text.browserColumn}</h3><ul>{text.browserItems.map((item) => <li key={item}>{item}</li>)}</ul></div>
               <div><h3>{text.cliColumn}</h3><ul>{text.cliItems.map((item) => <li key={item}>{item}</li>)}</ul></div>
             </div>
-            <div className="install-block">
+            <div className="install-block" id="install">
               <div><h3>{text.installTitle}</h3><p>{text.installText}</p></div>
               <InstallChooser copyLabel={text.copyCommand} copiedLabel={text.copied} groupLabel={text.packageManagers} />
               <a className="button install-link" href={repository}><Github aria-hidden="true" size={20} />{text.githubCta}</a>

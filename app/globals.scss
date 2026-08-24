@@ -494,6 +494,7 @@ h1 {
   grid-template-columns: 1fr auto;
   margin-top: 80px;
   padding: 30px;
+  scroll-margin-top: 24px;
 }
 .install-block h3 { font-size: 28px; margin: 0 0 4px; }
 .install-block p { margin: 0; }
@@ -513,7 +514,7 @@ h1 {
 }
 .install-tabs button + button { border-left: 0; }
 .install-tabs button.is-selected { background: $accent; color: #191a1b; }
-.install-command { align-items: center; background: $terminal; display: flex; }
+.install-command { align-items: center; background: $terminal; border: 2px solid $ink; display: flex; margin-top: 12px; }
 .install-command code {
   background: $terminal;
   color: $terminal-text;
