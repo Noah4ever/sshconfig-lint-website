@@ -38,13 +38,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       ]),
     },
     openGraph: {
+      type: 'website',
+      siteName: 'sshconfig-lint',
       title: titles[locale],
       description: descriptions[locale],
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       url: `/${locale}`,
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'sshconfig-lint browser checker' }],
     },
-    twitter: { title: titles[locale], description: descriptions[locale] },
+    twitter: { card: 'summary_large_image', title: titles[locale], description: descriptions[locale], images: ['/og.png'] },
   };
 }
 
