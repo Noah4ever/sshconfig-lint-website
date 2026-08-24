@@ -19,6 +19,7 @@ export function SitePage({ locale, stars }: { locale: Locale; stars: number }) {
         <nav className="site-nav" aria-label={text.primaryNavigation}>
           <a href="#playground">{text.nav.playground}</a>
           <a href="#checks">{text.nav.checks}</a>
+          <a href={`/${locale}/learn`}>{text.nav.learn}</a>
           <a href="#cli">{text.nav.cli}</a>
           <a className="nav-with-icon" href={repository} rel="noreferrer"><Github aria-hidden="true" size={19} />{text.nav.github}</a>
           <ThemeToggle darkLabel={text.darkMode} lightLabel={text.lightMode} />

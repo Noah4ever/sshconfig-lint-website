@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/rules',
     ...ruleDocs.map((rule) => `/rules/${rule.slug}`),
+    '/learn',
     '/privacy',
     '/legal',
   ];

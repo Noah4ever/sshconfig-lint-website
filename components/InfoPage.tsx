@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { copy, type Locale } from '../lib/i18n';
 import { ThemeToggle } from './ThemeToggle';
 
-type Props = { children: ReactNode; locale: Locale; title: string };
+type Props = { children: ReactNode; eyebrow?: string; locale: Locale; title: string };
 
-export function InfoPage({ children, locale, title }: Props) {
+export function InfoPage({ children, eyebrow = 'sshconfig-lint', locale, title }: Props) {
   const text = copy[locale];
   return (
     <div lang={locale}>
@@ -17,7 +17,7 @@ export function InfoPage({ children, locale, title }: Props) {
         </div>
       </header>
       <main className="info-page" id="main-content" tabIndex={-1}>
-        <p className="eyebrow">sshconfig-lint</p>
+        <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         {children}
       </main>
