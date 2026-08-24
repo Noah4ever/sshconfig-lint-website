@@ -7,6 +7,25 @@ type Lesson = {
   takeaway: string;
 };
 
+export type LearningQuizQuestion = {
+  line: number;
+  prompt: string;
+  options: string[];
+  correct: number;
+  explanation: string;
+};
+
+export type LearningQuizCopy = {
+  progress: string;
+  correctLabel: string;
+  wrongLabel: string;
+  completeTitle: string;
+  completeText: string;
+  reset: string;
+  questionLabel: string;
+  questions: LearningQuizQuestion[];
+};
+
 export type LearningCopy = {
   eyebrow: string;
   title: string;
@@ -20,9 +39,8 @@ export type LearningCopy = {
   exerciseEyebrow: string;
   exerciseTitle: string;
   exerciseIntro: string;
-  tasks: string[];
+  quiz: LearningQuizCopy;
   brokenLabel: string;
-  solutionLabel: string;
   solutionTitle: string;
   solutionText: string;
   fixedLabel: string;
@@ -66,10 +84,40 @@ export const learningCopy: Record<Locale, LearningCopy> = {
     ],
     exerciseEyebrow: 'CLASSROOM EXERCISE',
     exerciseTitle: 'Find three problems in this config',
-    exerciseIntro: 'Read the configuration as OpenSSH does, from top to bottom. The highlighted lines contain the clues.',
-    tasks: ['Which value for User reaches school-server?', 'Which setting weakens connection security?', 'Which Host block is defined twice?'],
+    exerciseIntro: 'Answer each question. The related config line is highlighted while you work, and the corrected version unlocks after all three answers are right.',
+    quiz: {
+      progress: 'Solved {correct} of {total}',
+      correctLabel: 'Correct',
+      wrongLabel: 'Try again',
+      completeTitle: 'Config understood',
+      completeText: 'You found all three issues. Compare your reasoning with the corrected version below.',
+      reset: 'Reset exercise',
+      questionLabel: 'Question {number}',
+      questions: [
+        {
+          line: 1,
+          prompt: 'Which User value reaches school-server?',
+          options: ['User student', 'User deploy', 'Both values are combined'],
+          correct: 1,
+          explanation: 'Host * matches first. For User, OpenSSH keeps the first value it obtains, so the later User student does not replace it.',
+        },
+        {
+          line: 2,
+          prompt: 'Which setting weakens connection security?',
+          options: ['HostName 203.0.113.42', 'StrictHostKeyChecking no', 'IdentityFile ~/.ssh/id_ed25519'],
+          correct: 1,
+          explanation: 'StrictHostKeyChecking no accepts changed host keys and removes an important defense against man-in-the-middle attacks.',
+        },
+        {
+          line: 9,
+          prompt: 'What structural problem makes the config harder to reason about?',
+          options: ['The Port directive is missing', 'The alias is too long', 'Host school-server is duplicated'],
+          correct: 2,
+          explanation: 'The same Host pattern appears twice. Combining both blocks makes the effective settings visible in one place.',
+        },
+      ],
+    },
     brokenLabel: 'Configuration to inspect',
-    solutionLabel: 'Show solution',
     solutionTitle: 'A simpler and safer version',
     solutionText: 'The specific host is now defined once and comes first. Host verification remains active, while shared defaults stay at the bottom.',
     fixedLabel: 'Corrected configuration',
@@ -111,10 +159,40 @@ export const learningCopy: Record<Locale, LearningCopy> = {
     ],
     exerciseEyebrow: 'UNTERRICHTSAUFGABE',
     exerciseTitle: 'Finde drei Probleme in dieser Config',
-    exerciseIntro: 'Lies die Konfiguration wie OpenSSH von oben nach unten. Die markierten Zeilen enthalten die Hinweise.',
-    tasks: ['Welcher User-Wert gilt für school-server?', 'Welche Einstellung schwächt die Verbindungssicherheit?', 'Welcher Host-Block ist doppelt vorhanden?'],
+    exerciseIntro: 'Beantworte jede Frage. Währenddessen wird die passende Config-Zeile hervorgehoben. Nach drei richtigen Antworten erscheint die korrigierte Version.',
+    quiz: {
+      progress: '{correct} von {total} gelöst',
+      correctLabel: 'Richtig',
+      wrongLabel: 'Noch nicht',
+      completeTitle: 'Config verstanden',
+      completeText: 'Du hast alle drei Probleme gefunden. Vergleiche deine Begründung jetzt mit der korrigierten Version.',
+      reset: 'Aufgabe zurücksetzen',
+      questionLabel: 'Frage {number}',
+      questions: [
+        {
+          line: 1,
+          prompt: 'Welcher User-Wert gilt für school-server?',
+          options: ['User student', 'User deploy', 'Beide Werte werden kombiniert'],
+          correct: 1,
+          explanation: 'Host * trifft zuerst zu. Für User behält OpenSSH den ersten gefundenen Wert. Das spätere User student ersetzt ihn deshalb nicht.',
+        },
+        {
+          line: 2,
+          prompt: 'Welche Einstellung schwächt die Verbindungssicherheit?',
+          options: ['HostName 203.0.113.42', 'StrictHostKeyChecking no', 'IdentityFile ~/.ssh/id_ed25519'],
+          correct: 1,
+          explanation: 'StrictHostKeyChecking no akzeptiert geänderte Host-Schlüssel und entfernt damit einen wichtigen Schutz vor Man-in-the-Middle-Angriffen.',
+        },
+        {
+          line: 9,
+          prompt: 'Welches strukturelle Problem macht die Config schwer verständlich?',
+          options: ['Die Port-Direktive fehlt', 'Der Alias ist zu lang', 'Host school-server ist doppelt'],
+          correct: 2,
+          explanation: 'Dasselbe Host-Muster steht zweimal in der Datei. Ein gemeinsamer Block macht alle wirksamen Einstellungen an einer Stelle sichtbar.',
+        },
+      ],
+    },
     brokenLabel: 'Konfiguration zum Prüfen',
-    solutionLabel: 'Lösung anzeigen',
     solutionTitle: 'Eine einfachere und sicherere Version',
     solutionText: 'Der konkrete Host steht jetzt genau einmal am Anfang. Die Host-Prüfung bleibt aktiv und gemeinsame Vorgaben stehen unten.',
     fixedLabel: 'Korrigierte Konfiguration',
@@ -156,10 +234,40 @@ export const learningCopy: Record<Locale, LearningCopy> = {
     ],
     exerciseEyebrow: 'EXERCICE EN CLASSE',
     exerciseTitle: 'Trouvez trois problèmes dans cette configuration',
-    exerciseIntro: 'Lisez la configuration comme OpenSSH, de haut en bas. Les lignes marquées donnent les indices.',
-    tasks: ['Quelle valeur User reçoit school-server ?', 'Quel réglage affaiblit la sécurité ?', 'Quel bloc Host est défini deux fois ?'],
+    exerciseIntro: 'Répondez à chaque question. La ligne concernée est mise en évidence et la version corrigée apparaît après trois bonnes réponses.',
+    quiz: {
+      progress: '{correct} sur {total} résolus',
+      correctLabel: 'Correct',
+      wrongLabel: 'Réessayez',
+      completeTitle: 'Configuration comprise',
+      completeText: 'Vous avez trouvé les trois problèmes. Comparez maintenant votre raisonnement avec la version corrigée.',
+      reset: 'Recommencer l’exercice',
+      questionLabel: 'Question {number}',
+      questions: [
+        {
+          line: 1,
+          prompt: 'Quelle valeur User reçoit school-server ?',
+          options: ['User student', 'User deploy', 'Les deux valeurs sont combinées'],
+          correct: 1,
+          explanation: 'Host * correspond en premier. Pour User, OpenSSH conserve la première valeur obtenue. La valeur User student située plus bas ne la remplace pas.',
+        },
+        {
+          line: 2,
+          prompt: 'Quel réglage affaiblit la sécurité de la connexion ?',
+          options: ['HostName 203.0.113.42', 'StrictHostKeyChecking no', 'IdentityFile ~/.ssh/id_ed25519'],
+          correct: 1,
+          explanation: 'StrictHostKeyChecking no accepte les clés modifiées et supprime une protection importante contre les attaques de type homme du milieu.',
+        },
+        {
+          line: 9,
+          prompt: 'Quel problème de structure complique la configuration ?',
+          options: ['La directive Port manque', 'L’alias est trop long', 'Host school-server est dupliqué'],
+          correct: 2,
+          explanation: 'Le même motif Host apparaît deux fois. Un seul bloc rend tous les réglages effectifs visibles au même endroit.',
+        },
+      ],
+    },
     brokenLabel: 'Configuration à examiner',
-    solutionLabel: 'Afficher la solution',
     solutionTitle: 'Une version plus simple et plus sûre',
     solutionText: 'L’hôte précis est maintenant défini une seule fois et apparaît en premier. La vérification reste active et les valeurs communes sont placées à la fin.',
     fixedLabel: 'Configuration corrigée',
@@ -201,10 +309,40 @@ export const learningCopy: Record<Locale, LearningCopy> = {
     ],
     exerciseEyebrow: 'EJERCICIO PARA CLASE',
     exerciseTitle: 'Encuentra tres problemas en esta configuración',
-    exerciseIntro: 'Lee la configuración como OpenSSH, de arriba abajo. Las líneas marcadas contienen las pistas.',
-    tasks: ['¿Qué valor de User recibe school-server?', '¿Qué ajuste debilita la seguridad?', '¿Qué bloque Host está definido dos veces?'],
+    exerciseIntro: 'Responde a cada pregunta. La línea relacionada se resalta mientras trabajas y la versión corregida aparece después de tres respuestas correctas.',
+    quiz: {
+      progress: '{correct} de {total} resueltos',
+      correctLabel: 'Correcto',
+      wrongLabel: 'Inténtalo de nuevo',
+      completeTitle: 'Configuración comprendida',
+      completeText: 'Has encontrado los tres problemas. Compara ahora tu razonamiento con la versión corregida.',
+      reset: 'Reiniciar ejercicio',
+      questionLabel: 'Pregunta {number}',
+      questions: [
+        {
+          line: 1,
+          prompt: '¿Qué valor de User recibe school-server?',
+          options: ['User student', 'User deploy', 'Se combinan ambos valores'],
+          correct: 1,
+          explanation: 'Host * coincide primero. Para User, OpenSSH conserva el primer valor obtenido, así que el User student posterior no lo sustituye.',
+        },
+        {
+          line: 2,
+          prompt: '¿Qué ajuste debilita la seguridad de la conexión?',
+          options: ['HostName 203.0.113.42', 'StrictHostKeyChecking no', 'IdentityFile ~/.ssh/id_ed25519'],
+          correct: 1,
+          explanation: 'StrictHostKeyChecking no acepta claves modificadas y elimina una defensa importante contra ataques de intermediario.',
+        },
+        {
+          line: 9,
+          prompt: '¿Qué problema estructural dificulta entender la configuración?',
+          options: ['Falta la directiva Port', 'El alias es demasiado largo', 'Host school-server está duplicado'],
+          correct: 2,
+          explanation: 'El mismo patrón Host aparece dos veces. Un único bloque permite ver todos los ajustes efectivos en un solo lugar.',
+        },
+      ],
+    },
     brokenLabel: 'Configuración para revisar',
-    solutionLabel: 'Mostrar solución',
     solutionTitle: 'Una versión más simple y segura',
     solutionText: 'El host concreto aparece una sola vez y está al principio. La verificación sigue activa y los valores compartidos quedan al final.',
     fixedLabel: 'Configuración corregida',

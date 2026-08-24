@@ -2,23 +2,11 @@ import type { Metadata } from 'next';
 import { ArrowRight, BookOpen, Clock3, GraduationCap, ListChecks, Users } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { InfoPage } from '../../../components/InfoPage';
+import { LearningExercise } from '../../../components/LearningExercise';
 import { copy, isLocale, locales } from '../../../lib/i18n';
 import { brokenExercise, exerciseHighlights, fixedExercise, learningCopy } from '../../../lib/learning';
 
 const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sshconfig-lint.apps.thiering.org';
-
-function CodeLines({ code, highlights = [] }: { code: string; highlights?: Array<{ line: number; target: string }> }) {
-  return code.split('\n').map((line, index) => {
-    const lineNumber = index + 1;
-    const highlight = highlights.find((item) => item.line === lineNumber);
-    const start = highlight ? line.indexOf(highlight.target) : -1;
-    return (
-      <span className="rule-code-line" data-line={lineNumber} key={lineNumber}>
-        {highlight && start >= 0 ? <>{line.slice(0, start)}<mark>{highlight.target}</mark>{line.slice(start + highlight.target.length)}</> : line || ' '}
-      </span>
-    );
-  });
-}
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -96,24 +84,16 @@ export default async function LearnPage({ params }: { params: Promise<{ locale: 
           </div>
           <ListChecks aria-hidden="true" size={46} strokeWidth={1.8} />
         </div>
-        <ol className="exercise-tasks">
-          {text.tasks.map((task) => <li key={task}>{task}</li>)}
-        </ol>
-        <figure className="learning-code-sample code-sample-wrong">
-          <figcaption>{text.brokenLabel}</figcaption>
-          <pre><code><CodeLines code={brokenExercise} highlights={exerciseHighlights} /></code></pre>
-        </figure>
-        <details className="exercise-solution">
-          <summary>{text.solutionLabel}</summary>
-          <div className="solution-content">
-            <h3>{text.solutionTitle}</h3>
-            <p>{text.solutionText}</p>
-            <figure className="learning-code-sample code-sample-fixed">
-              <figcaption>{text.fixedLabel}</figcaption>
-              <pre><code><CodeLines code={fixedExercise} /></code></pre>
-            </figure>
-          </div>
-        </details>
+        <LearningExercise
+          brokenConfig={brokenExercise}
+          brokenLabel={text.brokenLabel}
+          fixedConfig={fixedExercise}
+          fixedLabel={text.fixedLabel}
+          highlights={exerciseHighlights}
+          quiz={text.quiz}
+          solutionText={text.solutionText}
+          solutionTitle={text.solutionTitle}
+        />
       </section>
 
       <section className="teacher-section" aria-labelledby="teacher-title">
