@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   category: 'developer tools',
   keywords: ['SSH config linter', 'SSH config checker', 'OpenSSH linter', 'SSH config validator', 'sshconfig-lint'],
   robots: { index: true, follow: true },
+  verification: { google: 'vdPI7zvHprQvfklLrWxcQ_cPQt0hXHRWex7xwFN3FBk' },
   openGraph: {
     type: 'website',
     siteName: 'sshconfig-lint',
