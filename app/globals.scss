@@ -433,6 +433,7 @@ h1 {
   width: 100%;
 }
 .finding-shell:hover { background: #45474b; }
+.finding-error { border-left-color: $danger; }
 .finding-info { border-left-color: $blue; }
 .finding strong {
   display: block;

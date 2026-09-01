@@ -24,6 +24,18 @@ const translations = (
 
 export const ruleDocs: RuleDoc[] = [
   {
+    slug: 'invalid-directive-value', code: 'INVALID_VALUE', severity: 'error', browser: true,
+    example: 'Host production\n  HostName server.example.com\n  Port 70000',
+    fixedExample: 'Host production\n  HostName server.example.com\n  Port 22',
+    highlights: [{ line: 3, target: '70000' }],
+    text: translations(
+      { title: 'Invalid directive value', summary: 'A directive contains a value that OpenSSH cannot accept.', why: 'Port numbers are limited to the range from 1 to 65535. A value outside that range or a non-integer prevents OpenSSH from reading the configuration.', fix: 'Replace the marked Port value with an integer from 1 to 65535. Port 22 is the usual SSH default. If the server uses another port, enter that exact number and verify the effective setting with ssh -G production.' },
+      { title: 'Ungültiger Direktivenwert', summary: 'Eine Direktive enthält einen Wert, den OpenSSH nicht akzeptiert.', why: 'Portnummern sind auf den Bereich von 1 bis 65535 begrenzt. Ein Wert außerhalb dieses Bereichs oder keine ganze Zahl verhindert, dass OpenSSH die Konfiguration einliest.', fix: 'Ersetze den markierten Port-Wert durch eine ganze Zahl von 1 bis 65535. Port 22 ist der übliche SSH-Standard. Verwendet der Server einen anderen Port, trage genau diese Nummer ein und prüfe den wirksamen Wert mit ssh -G production.' },
+      { title: 'Valeur de directive invalide', summary: 'Une directive contient une valeur qu’OpenSSH ne peut pas accepter.', why: 'Les numéros de port sont limités à la plage de 1 à 65535. Une valeur hors plage ou non entière empêche OpenSSH de lire la configuration.', fix: 'Remplacez la valeur Port indiquée par un entier de 1 à 65535. Le port 22 est la valeur SSH habituelle. Si le serveur utilise un autre port, saisissez ce numéro exact et vérifiez le résultat avec ssh -G production.' },
+      { title: 'Valor de directiva no válido', summary: 'Una directiva contiene un valor que OpenSSH no puede aceptar.', why: 'Los números de puerto están limitados al rango de 1 a 65535. Un valor fuera del rango o que no sea entero impide que OpenSSH lea la configuración.', fix: 'Sustituye el valor Port marcado por un entero entre 1 y 65535. El puerto 22 es el valor SSH habitual. Si el servidor usa otro puerto, introduce ese número exacto y comprueba el resultado con ssh -G production.' },
+    ),
+  },
+  {
     slug: 'duplicate-host', code: 'DUP_HOST', severity: 'warning', browser: true,
     example: 'Host github.com\n  User git\n\nHost github.com\n  User deploy',
     fixedExample: 'Host github.com\n  User git',
@@ -41,10 +53,10 @@ export const ruleDocs: RuleDoc[] = [
     fixedExample: 'Host production\n  IdentityFile ~/.ssh/id_ed25519',
     highlights: [{ line: 2, target: '~/.ssh/id_removed' }],
     text: translations(
-      { title: 'Missing IdentityFile', summary: 'An IdentityFile path does not exist on the local machine.', why: 'SSH cannot use a private key that was moved, renamed, or deleted.', fix: 'Check the path with ls or test -f, then point IdentityFile at the existing private key. If the key was intentionally removed, delete the directive; if it was restored, keep its permissions restricted to the owner.' },
-      { title: 'Fehlende IdentityFile', summary: 'Ein IdentityFile-Pfad existiert auf dem lokalen Rechner nicht.', why: 'SSH kann einen verschobenen, umbenannten oder gelöschten privaten Schlüssel nicht verwenden.', fix: 'Prüfe den Pfad mit ls oder test -f und trage anschließend den tatsächlich vorhandenen privaten Schlüssel ein. Wurde der Schlüssel absichtlich entfernt, lösche die Direktive; nach einer Wiederherstellung sollten die Dateirechte nur dem Besitzer Zugriff geben.' },
-      { title: 'IdentityFile introuvable', summary: 'Un chemin IdentityFile n’existe pas sur la machine locale.', why: 'SSH ne peut pas utiliser une clé déplacée, renommée ou supprimée.', fix: 'Vérifiez le chemin avec ls ou test -f puis indiquez la clé privée existante. Supprimez la directive si la clé n’est plus utilisée et limitez ses permissions au propriétaire si vous la restaurez.' },
-      { title: 'IdentityFile ausente', summary: 'Una ruta IdentityFile no existe en el equipo local.', why: 'SSH no puede usar una clave movida, renombrada o eliminada.', fix: 'Comprueba la ruta con ls o test -f y apunta IdentityFile a la clave privada existente. Elimina la directiva si ya no se usa y restringe los permisos al propietario si restauras la clave.' },
+      { title: 'Missing IdentityFile', summary: 'An IdentityFile path does not exist on the local machine.', why: 'SSH cannot use a private key that was moved, renamed, or deleted.', fix: 'Check the path with ls or test -f, then point IdentityFile at the existing private key. If the key was intentionally removed, delete the directive or use IdentityFile none to explicitly disable identity files. If it was restored, keep its permissions restricted to the owner.' },
+      { title: 'Fehlende IdentityFile', summary: 'Ein IdentityFile-Pfad existiert auf dem lokalen Rechner nicht.', why: 'SSH kann einen verschobenen, umbenannten oder gelöschten privaten Schlüssel nicht verwenden.', fix: 'Prüfe den Pfad mit ls oder test -f und trage anschließend den tatsächlich vorhandenen privaten Schlüssel ein. Wurde der Schlüssel absichtlich entfernt, lösche die Direktive oder deaktiviere Identitätsdateien ausdrücklich mit IdentityFile none. Nach einer Wiederherstellung sollten die Dateirechte nur dem Besitzer Zugriff geben.' },
+      { title: 'IdentityFile introuvable', summary: 'Un chemin IdentityFile n’existe pas sur la machine locale.', why: 'SSH ne peut pas utiliser une clé déplacée, renommée ou supprimée.', fix: 'Vérifiez le chemin avec ls ou test -f puis indiquez la clé privée existante. Supprimez la directive si la clé n’est plus utilisée ou utilisez IdentityFile none pour désactiver explicitement les fichiers d’identité. Limitez ses permissions au propriétaire si vous la restaurez.' },
+      { title: 'IdentityFile ausente', summary: 'Una ruta IdentityFile no existe en el equipo local.', why: 'SSH no puede usar una clave movida, renombrada o eliminada.', fix: 'Comprueba la ruta con ls o test -f y apunta IdentityFile a la clave privada existente. Elimina la directiva si ya no se usa o utiliza IdentityFile none para desactivar explícitamente los archivos de identidad. Restringe los permisos al propietario si restauras la clave.' },
     ),
   },
   {

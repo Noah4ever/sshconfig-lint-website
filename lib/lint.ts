@@ -1,4 +1,4 @@
-export type Severity = 'warning' | 'info';
+export type Severity = 'error' | 'warning' | 'info';
 
 export type MessageKey =
   | 'duplicateHost'
@@ -11,7 +11,8 @@ export type MessageKey =
   | 'forwardAgent'
   | 'forwardX11'
   | 'forwardX11Trusted'
-  | 'unsafeControlPath';
+  | 'unsafeControlPath'
+  | 'invalidValue';
 
 export type Finding = {
   code: string;
@@ -55,6 +56,18 @@ const weakAlgorithms = new Set([
   'umac-64@openssh.com', 'umac-64-etm@openssh.com', 'diffie-hellman-group1-sha1',
   'diffie-hellman-group14-sha1', 'diffie-hellman-group-exchange-sha1', 'ssh-dss', 'ssh-rsa',
 ]);
+
+type ValueSpec = {
+  accepts: (value: string) => boolean;
+  directive: string;
+};
+
+const valueSpecs: ValueSpec[] = [
+  {
+    directive: 'Port',
+    accepts: (value) => /^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 65535,
+  },
+];
 
 const stripComment = (line: string) => {
   let quoted = false;
@@ -124,6 +137,18 @@ export function lintConfig(source: string): LintResult {
   const seenByScope = new Map<number, Map<string, number>>();
   directives.forEach((directive) => {
     const keyLower = directive.key.toLowerCase();
+    const valueSpec = valueSpecs.find((spec) => spec.directive.toLowerCase() === keyLower);
+    if (valueSpec && !valueSpec.accepts(directive.value)) {
+      add(
+        findings,
+        'INVALID_VALUE',
+        directive.line,
+        'invalidValue',
+        { directive: valueSpec.directive, target: directive.value },
+        'error',
+      );
+    }
+
     if (!multiValueDirectives.has(keyLower) && keyLower !== 'include') {
       const seen = seenByScope.get(directive.scope) ?? new Map<string, number>();
       const first = seen.get(keyLower);

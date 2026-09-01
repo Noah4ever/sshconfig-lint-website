@@ -1,4 +1,5 @@
 export const ruleSlugByCode: Record<string, string> = {
+  INVALID_VALUE: 'invalid-directive-value',
   DUP_DIRECTIVE: 'duplicate-directives',
   DUP_HOST: 'duplicate-host',
   INCLUDE_CYCLE: 'include-cycle',
