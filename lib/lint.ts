@@ -12,7 +12,10 @@ export type MessageKey =
   | 'forwardX11'
   | 'forwardX11Trusted'
   | 'unsafeControlPath'
-  | 'invalidValue';
+  | 'invalidIntegerRange'
+  | 'invalidTime'
+  | 'invalidOctalMask'
+  | 'invalidIpQos';
 
 export type Finding = {
   code: string;
@@ -58,14 +61,134 @@ const weakAlgorithms = new Set([
 ]);
 
 type ValueSpec = {
-  accepts: (value: string) => boolean;
+  accepts: (arguments_: string[]) => boolean;
+  data?: Record<string, string | number>;
   directive: string;
+  messageKey: MessageKey;
 };
 
+const parseValueArguments = (value: string): string[] | null => {
+  const arguments_: string[] = [];
+  let current = '';
+  let quoted = false;
+  let escaped = false;
+  let started = false;
+
+  for (const character of value) {
+    if (escaped) {
+      current += character;
+      escaped = false;
+      started = true;
+    } else if (character === '\\' && quoted) {
+      escaped = true;
+      started = true;
+    } else if (character === '"') {
+      quoted = !quoted;
+      started = true;
+    } else if (/\s/.test(character) && !quoted) {
+      if (started) {
+        arguments_.push(current);
+        current = '';
+        started = false;
+      }
+    } else {
+      current += character;
+      started = true;
+    }
+  }
+
+  if (quoted || escaped) return null;
+  if (started) arguments_.push(current);
+  return arguments_;
+};
+
+const parseUnsignedDecimal = (value: string) => {
+  if (!/^\+?\d+$/.test(value)) return null;
+  const number = Number(value);
+  return Number.isSafeInteger(number) ? number : null;
+};
+
+const acceptsIntegerRange = (arguments_: string[], min: number, max: number) => {
+  if (arguments_.length !== 1) return false;
+  const number = parseUnsignedDecimal(arguments_[0]);
+  return number !== null && number >= min && number <= max;
+};
+
+const acceptsTime = (arguments_: string[]) => {
+  if (arguments_.length !== 1) return false;
+  const value = arguments_[0];
+  if (value === 'none') return true;
+  if (!value || !/^[\x00-\x7F]*$/.test(value)) return false;
+
+  let index = 0;
+  let total = 0;
+  let seenSeconds = false;
+  while (index < value.length) {
+    const match = value.slice(index).match(/^(\d+(?:\.\d+)?|\.\d+)([smhdwSMHDW]?)/);
+    if (!match) return false;
+    const number = Number(match[1]);
+    const unit = match[2].toLowerCase();
+    const multiplier = unit === 'w' ? 604800
+      : unit === 'd' ? 86400
+        : unit === 'h' ? 3600
+          : unit === 'm' ? 60
+            : 1;
+    if (match[1].includes('.') && multiplier !== 1) return false;
+    if (multiplier === 1) {
+      if (seenSeconds) return false;
+      seenSeconds = true;
+    }
+    total += number * multiplier;
+    if (!Number.isFinite(total) || total > 2147483647) return false;
+    index += match[0].length;
+  }
+  return true;
+};
+
+const acceptsOctalMask = (arguments_: string[]) => {
+  if (arguments_.length !== 1) return false;
+  const digits = arguments_[0].startsWith('+') ? arguments_[0].slice(1) : arguments_[0];
+  return /^[0-7]+$/.test(digits) && Number.parseInt(digits, 8) <= 0o777;
+};
+
+const ipQosNames = new Set([
+  'none', 'af11', 'af12', 'af13', 'af21', 'af22', 'af23', 'af31', 'af32', 'af33',
+  'af41', 'af42', 'af43', 'cs0', 'cs1', 'cs2', 'cs3', 'cs4', 'cs5', 'cs6', 'cs7',
+  'ef', 'le', 'va', 'lowdelay', 'throughput', 'reliability',
+]);
+
+const acceptsIpQos = (arguments_: string[]) => arguments_.length >= 1
+  && arguments_.length <= 2
+  && arguments_.every((argument) => {
+    if (ipQosNames.has(argument.toLowerCase())) return true;
+    const number = parseUnsignedDecimal(argument);
+    return number !== null && number <= 255;
+  });
+
+const integerSpec = (directive: string, min: number, max: number): ValueSpec => ({
+  directive,
+  messageKey: 'invalidIntegerRange',
+  data: { min, max },
+  accepts: (arguments_) => acceptsIntegerRange(arguments_, min, max),
+});
+
 const valueSpecs: ValueSpec[] = [
+  integerSpec('Port', 1, 65535),
+  integerSpec('ConnectionAttempts', 1, 2147483647),
+  integerSpec('NumberOfPasswordPrompts', 0, 2147483647),
+  integerSpec('ServerAliveCountMax', 0, 2147483647),
+  integerSpec('CanonicalizeMaxDots', 0, 2147483647),
   {
-    directive: 'Port',
-    accepts: (value) => /^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 65535,
+    directive: 'ConnectTimeout', messageKey: 'invalidTime', accepts: acceptsTime,
+  },
+  {
+    directive: 'ServerAliveInterval', messageKey: 'invalidTime', accepts: acceptsTime,
+  },
+  {
+    directive: 'StreamLocalBindMask', messageKey: 'invalidOctalMask', accepts: acceptsOctalMask,
+  },
+  {
+    directive: 'IPQoS', messageKey: 'invalidIpQos', accepts: acceptsIpQos,
   },
 ];
 
@@ -138,13 +261,14 @@ export function lintConfig(source: string): LintResult {
   directives.forEach((directive) => {
     const keyLower = directive.key.toLowerCase();
     const valueSpec = valueSpecs.find((spec) => spec.directive.toLowerCase() === keyLower);
-    if (valueSpec && !valueSpec.accepts(directive.value)) {
+    const valueArguments = valueSpec ? parseValueArguments(directive.value) : null;
+    if (valueSpec && (valueArguments === null || !valueSpec.accepts(valueArguments))) {
       add(
         findings,
         'INVALID_VALUE',
         directive.line,
-        'invalidValue',
-        { directive: valueSpec.directive, target: directive.value },
+        valueSpec.messageKey,
+        { directive: valueSpec.directive, target: directive.value, ...valueSpec.data },
         'error',
       );
     }
