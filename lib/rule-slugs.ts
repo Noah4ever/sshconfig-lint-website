@@ -3,6 +3,7 @@ export const ruleSlugByCode: Record<string, string> = {
   DUP_DIRECTIVE: 'duplicate-directives',
   DUP_HOST: 'duplicate-host',
   INCLUDE_CYCLE: 'include-cycle',
+  INCLUDE_DEPTH: 'include-depth',
   INCLUDE_GLOB: 'include-glob',
   INCLUDE_NO_MATCH: 'include-no-match',
   INCLUDE_READ: 'include-read',

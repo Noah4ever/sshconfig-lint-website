@@ -132,6 +132,18 @@ export const ruleDocs: RuleDoc[] = [
     ),
   },
   {
+    slug: 'include-depth', code: 'INCLUDE_DEPTH', severity: 'error', browser: false,
+    example: '# config\nInclude level-1.conf\n\n# ... level-16.conf\nInclude level-17.conf',
+    fixedExample: '# config\nInclude hosts/work.conf\nInclude hosts/personal.conf',
+    highlights: [{ line: 5, target: 'Include level-17.conf' }],
+    text: translations(
+      { title: 'Include nesting too deep', summary: 'An Include chain exceeds OpenSSH’s maximum nesting depth of 16.', why: 'OpenSSH stops loading the configuration when recursive Include nesting becomes too deep. A long chain is also difficult to understand and maintain.', fix: 'Flatten the Include tree. Let the root config include feature or host files directly, move shared settings into one common file, and keep every chain at 16 levels or fewer.' },
+      { title: 'Include-Verschachtelung zu tief', summary: 'Eine Include-Kette überschreitet die maximale OpenSSH-Tiefe von 16 Ebenen.', why: 'OpenSSH bricht das Laden der Konfiguration ab, wenn Includes zu tief verschachtelt sind. Eine lange Kette ist außerdem schwer zu verstehen und zu pflegen.', fix: 'Flache die Include-Struktur ab. Binde Funktions- oder Host-Dateien direkt aus der Hauptkonfiguration ein, verschiebe gemeinsame Einstellungen in eine zentrale Datei und halte jede Kette bei höchstens 16 Ebenen.' },
+      { title: 'Imbrication Include trop profonde', summary: 'Une chaîne Include dépasse la profondeur maximale de 16 niveaux d’OpenSSH.', why: 'OpenSSH arrête de charger la configuration lorsque les inclusions sont trop profondes. Une longue chaîne est aussi difficile à maintenir.', fix: 'Aplatissez l’arbre Include. Incluez directement les fichiers d’hôtes ou de fonctions depuis la configuration principale et placez les réglages partagés dans un fichier commun.' },
+      { title: 'Anidamiento Include demasiado profundo', summary: 'Una cadena Include supera la profundidad máxima de 16 niveles de OpenSSH.', why: 'OpenSSH deja de cargar la configuración cuando los Include están demasiado anidados. Una cadena larga también es difícil de mantener.', fix: 'Aplana el árbol de Include. Incluye directamente los archivos de hosts o funciones desde la configuración principal y mueve los ajustes compartidos a un archivo común.' },
+    ),
+  },
+  {
     slug: 'include-read', code: 'INCLUDE_READ', severity: 'error', browser: false,
     example: 'Include ~/.ssh/conf.d/private.conf',
     fixedExample: 'Include ~/.ssh/conf.d/work.conf',
