@@ -16,7 +16,11 @@ export type MessageKey =
   | 'invalidTime'
   | 'invalidOctalMask'
   | 'invalidIpQos'
-  | 'invalidEnum';
+  | 'invalidEnum'
+  | 'negatedOnlyHost'
+  | 'proxyConflict'
+  | 'localCommandDisabled'
+  | 'invalidPercentToken';
 
 export type Finding = {
   code: string;
@@ -41,6 +45,7 @@ type ParsedDirective = {
 };
 
 type HostBlock = { patterns: string[]; line: number };
+type MatchBlock = { criteria: string; line: number };
 
 const multiValueDirectives = new Set([
   'identityfile', 'certificatefile', 'localforward', 'remoteforward',
@@ -60,6 +65,38 @@ const weakAlgorithms = new Set([
   'umac-64@openssh.com', 'umac-64-etm@openssh.com', 'diffie-hellman-group1-sha1',
   'diffie-hellman-group14-sha1', 'diffie-hellman-group-exchange-sha1', 'ssh-dss', 'ssh-rsa',
 ]);
+
+const commonPercentTokens = new Set(['%', 'C', 'd', 'h', 'i', 'j', 'k', 'L', 'l', 'n', 'p', 'r', 'u']);
+const knownHostsPercentTokens = new Set(['%', 'C', 'd', 'f', 'H', 'h', 'I', 'i', 'j', 'K', 'k', 'L', 'l', 'n', 'p', 'r', 't', 'u']);
+const allPercentTokens = new Set(['%', 'C', 'd', 'f', 'H', 'h', 'I', 'i', 'j', 'K', 'k', 'L', 'l', 'n', 'p', 'r', 'T', 't', 'u']);
+const hostnamePercentTokens = new Set(['%', 'h']);
+const proxyPercentTokens = new Set(['%', 'h', 'n', 'p', 'r']);
+
+const commonTokenDirectives = new Set([
+  'certificatefile', 'controlpath', 'identityagent', 'identityfile', 'include',
+  'localforward', 'remotecommand', 'remoteforward', 'revokedhostkeys',
+  'userknownhostsfile', 'versionaddendum',
+]);
+
+const allowedPercentTokens = (keyLower: string): Set<string> | null => {
+  if (keyLower === 'knownhostscommand') return knownHostsPercentTokens;
+  if (keyLower === 'localcommand') return allPercentTokens;
+  if (keyLower === 'hostname') return hostnamePercentTokens;
+  if (keyLower === 'proxycommand' || keyLower === 'proxyjump') return proxyPercentTokens;
+  if (commonTokenDirectives.has(keyLower)) return commonPercentTokens;
+  return null;
+};
+
+const firstInvalidPercentToken = (value: string, allowed: Set<string>): string | null => {
+  for (let index = 0; index < value.length; index += 1) {
+    if (value[index] !== '%') continue;
+    if (index + 1 >= value.length) return '%';
+    const token = value[index + 1];
+    if (!allowed.has(token)) return `%${token}`;
+    index += 1;
+  }
+  return null;
+};
 
 type ValueSpec = {
   accepts: (arguments_: string[]) => boolean;
@@ -249,6 +286,7 @@ const add = (
 export function lintConfig(source: string): LintResult {
   const directives: ParsedDirective[] = [];
   const hostBlocks: HostBlock[] = [];
+  const matchBlocks: MatchBlock[] = [];
   let scope = 0;
   let hostPatterns: string[] = [];
 
@@ -260,6 +298,7 @@ export function lintConfig(source: string): LintResult {
       scope += 1;
       hostPatterns = keyLower === 'host' ? parsed.value.split(/\s+/).filter(Boolean) : [];
       if (keyLower === 'host') hostBlocks.push({ patterns: hostPatterns, line: index + 1 });
+      else matchBlocks.push({ criteria: parsed.value, line: index + 1 });
       return;
     }
     directives.push({ hostPatterns: [...hostPatterns], key: parsed.key, line: index + 1, scope, value: parsed.value });
@@ -270,6 +309,9 @@ export function lintConfig(source: string): LintResult {
   let wildcardLine: number | undefined;
 
   hostBlocks.forEach((block) => {
+    if (block.patterns.length > 0 && block.patterns.every((pattern) => pattern.startsWith('!'))) {
+      add(findings, 'NEGATED_HOST', block.line, 'negatedOnlyHost', { patterns: block.patterns.join(' ') });
+    }
     block.patterns.forEach((pattern) => {
       const first = seenHosts.get(pattern);
       if (first !== undefined) add(findings, 'DUP_HOST', block.line, 'duplicateHost', { pattern, first });
@@ -281,7 +323,23 @@ export function lintConfig(source: string): LintResult {
     });
   });
 
+  matchBlocks.forEach((block) => {
+    const arguments_ = parseValueArguments(block.criteria);
+    if (!arguments_) return;
+    const execIndex = arguments_.findIndex((argument) => argument.toLowerCase() === 'exec');
+    if (execIndex < 0 || execIndex + 1 >= arguments_.length) return;
+    const token = firstInvalidPercentToken(arguments_[execIndex + 1], commonPercentTokens);
+    if (token) add(findings, 'INVALID_TOKEN', block.line, 'invalidPercentToken', { directive: 'Match exec', token }, 'error');
+  });
+
   const seenByScope = new Map<number, Map<string, number>>();
+  const firstProxyByScope = new Map<number, { directive: string; line: number }>();
+  const hasUnresolvedInclude = directives.some((directive) => directive.key.toLowerCase() === 'include');
+  const canEnableLocalCommand = directives.some((directive) => {
+    if (directive.key.toLowerCase() !== 'permitlocalcommand') return false;
+    const arguments_ = parseValueArguments(directive.value);
+    return arguments_?.length === 1 && ['yes', 'true'].includes(arguments_[0].toLowerCase());
+  });
   directives.forEach((directive) => {
     const keyLower = directive.key.toLowerCase();
     const valueSpec = valueSpecs.find((spec) => spec.directive.toLowerCase() === keyLower);
@@ -295,6 +353,29 @@ export function lintConfig(source: string): LintResult {
         { directive: valueSpec.directive, target: directive.value, ...valueSpec.data },
         'error',
       );
+    }
+
+    if (keyLower === 'proxycommand' || keyLower === 'proxyjump') {
+      const first = firstProxyByScope.get(directive.scope);
+      if (!first) {
+        firstProxyByScope.set(directive.scope, { directive: directive.key, line: directive.line });
+      } else if (first.directive.toLowerCase() !== keyLower) {
+        add(findings, 'PROXY_CONFLICT', directive.line, 'proxyConflict', {
+          first: first.line,
+          firstDirective: first.directive,
+          ignoredDirective: directive.key,
+        });
+      }
+    }
+
+    if (keyLower === 'localcommand' && !hasUnresolvedInclude && !canEnableLocalCommand) {
+      add(findings, 'LOCAL_COMMAND_DISABLED', directive.line, 'localCommandDisabled', {});
+    }
+
+    const percentTokens = allowedPercentTokens(keyLower);
+    if (percentTokens) {
+      const token = firstInvalidPercentToken(directive.value, percentTokens);
+      if (token) add(findings, 'INVALID_TOKEN', directive.line, 'invalidPercentToken', { directive: directive.key, token }, 'error');
     }
 
     if (!multiValueDirectives.has(keyLower) && keyLower !== 'include') {

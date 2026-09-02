@@ -167,6 +167,78 @@ export const ruleDocs: RuleDoc[] = [
       { title: 'Include sin coincidencias', summary: 'Un patrón Include válido no encuentra archivos.', why: 'Puede ser intencionado, pero suele indicar una ruta antigua.', fix: 'Lista el directorio y compara los nombres con el patrón. Corrige la ruta o extensión, crea el archivo esperado o elimina el Include si ya no se usa.' },
     ),
   },
+  {
+    slug: 'negated-only-host', code: 'NEGATED_HOST', severity: 'warning', browser: true,
+    example: 'Host !internal !retired\n  User deploy',
+    fixedExample: 'Host * !internal !retired\n  User deploy',
+    highlights: [{ line: 1, target: 'Host !internal !retired' }],
+    text: translations(
+      { title: 'Host has only negated patterns', summary: 'A Host block contains exclusions but no positive pattern.', why: 'Negated patterns only remove candidates from an existing positive match. Without a positive pattern, this block can never apply.', fix: 'Add the positive set you intended. Use Host * !internal !retired to match every host except those exclusions, or name the allowed hosts explicitly. Remove the block if it is obsolete.' },
+      { title: 'Host enthält nur negierte Muster', summary: 'Ein Host-Block enthält Ausschlüsse, aber kein positives Muster.', why: 'Negierte Muster entfernen nur Kandidaten aus einem positiven Treffer. Ohne positives Muster kann dieser Block niemals gelten.', fix: 'Füge die beabsichtigte positive Auswahl hinzu. Host * !internal !retired gilt für alle Hosts außer den Ausschlüssen. Alternativ nennst du die erlaubten Hosts ausdrücklich oder entfernst den veralteten Block.' },
+      { title: 'Host contient uniquement des motifs négatifs', summary: 'Un bloc Host contient des exclusions, mais aucun motif positif.', why: 'Un motif négatif retire seulement des candidats d’une correspondance positive. Sans motif positif, ce bloc ne peut jamais s’appliquer.', fix: 'Ajoutez l’ensemble positif voulu. Host * !internal !retired vise tous les hôtes sauf les exclusions. Vous pouvez aussi nommer les hôtes autorisés ou supprimer le bloc obsolète.' },
+      { title: 'Host contiene solo patrones negados', summary: 'Un bloque Host contiene exclusiones, pero ningún patrón positivo.', why: 'Los patrones negados solo eliminan candidatos de una coincidencia positiva. Sin un patrón positivo, el bloque nunca puede aplicarse.', fix: 'Añade el conjunto positivo que querías. Host * !internal !retired coincide con todos los hosts salvo las exclusiones. También puedes nombrar los hosts permitidos o eliminar el bloque obsoleto.' },
+    ),
+  },
+  {
+    slug: 'proxy-command-jump-conflict', code: 'PROXY_CONFLICT', severity: 'warning', browser: true,
+    example: 'Host production\n  ProxyCommand ssh bastion -W %h:%p\n  ProxyJump jump.example.com',
+    fixedExample: 'Host production\n  ProxyJump jump.example.com',
+    highlights: [{ line: 2, target: 'ProxyCommand ssh bastion -W %h:%p' }, { line: 3, target: 'ProxyJump jump.example.com' }],
+    text: translations(
+      { title: 'ProxyCommand and ProxyJump conflict', summary: 'Both proxy mechanisms are configured in the same scope.', why: 'OpenSSH uses the first proxy option it obtains. The later directive looks active but has no effect.', fix: 'Choose one mechanism and remove the other. ProxyJump is usually easier to read. Keep ProxyCommand when you need custom transport behavior, then confirm the effective value with ssh -G production.' },
+      { title: 'ProxyCommand und ProxyJump widersprechen sich', summary: 'Beide Proxy-Wege sind im selben Bereich konfiguriert.', why: 'OpenSSH nutzt die zuerst gefundene Proxy-Option. Die spätere Direktive sieht aktiv aus, bleibt aber wirkungslos.', fix: 'Entscheide dich für einen Weg und entferne den anderen. ProxyJump ist meist leichter lesbar. Behalte ProxyCommand für spezielles Transportverhalten und prüfe den wirksamen Wert mit ssh -G production.' },
+      { title: 'Conflit entre ProxyCommand et ProxyJump', summary: 'Les deux méthodes proxy sont configurées dans la même portée.', why: 'OpenSSH utilise la première option proxy trouvée. La directive suivante semble active, mais reste sans effet.', fix: 'Choisissez une méthode et supprimez l’autre. ProxyJump est souvent plus lisible. Gardez ProxyCommand pour un transport personnalisé, puis vérifiez avec ssh -G production.' },
+      { title: 'Conflicto entre ProxyCommand y ProxyJump', summary: 'Los dos métodos proxy están configurados en el mismo ámbito.', why: 'OpenSSH utiliza la primera opción proxy encontrada. La directiva posterior parece activa, pero no tiene efecto.', fix: 'Elige un método y elimina el otro. ProxyJump suele ser más legible. Conserva ProxyCommand para transportes personalizados y comprueba el resultado con ssh -G production.' },
+    ),
+  },
+  {
+    slug: 'revoked-host-keys-readable', code: 'REVOKED_HOST_KEYS_UNREADABLE', severity: 'error', browser: false,
+    example: 'Host *\n  RevokedHostKeys ~/.ssh/revoked-old.krl',
+    fixedExample: 'Host *\n  RevokedHostKeys ~/.ssh/revoked.krl',
+    highlights: [{ line: 2, target: '~/.ssh/revoked-old.krl' }],
+    text: translations(
+      { title: 'RevokedHostKeys file is unreadable', summary: 'An explicit RevokedHostKeys file is missing, unreadable, or not a regular file.', why: 'OpenSSH refuses host authentication for every matching host when this file cannot be read. A stale path can therefore block all affected connections.', fix: 'Point RevokedHostKeys at an existing readable KRL or revoked-keys file. Use RevokedHostKeys none only when revocation checking is intentionally disabled. Run the CLI on the same account that will run SSH.' },
+      { title: 'RevokedHostKeys-Datei ist nicht lesbar', summary: 'Eine explizite RevokedHostKeys-Datei fehlt, ist nicht lesbar oder keine reguläre Datei.', why: 'OpenSSH lehnt die Host-Authentifizierung für alle passenden Hosts ab, wenn diese Datei nicht gelesen werden kann. Ein alter Pfad kann damit alle betroffenen Verbindungen blockieren.', fix: 'Verweise auf eine vorhandene lesbare KRL- oder Sperrdatei. Nutze RevokedHostKeys none nur, wenn die Sperrprüfung bewusst deaktiviert werden soll. Führe die CLI mit demselben Benutzer wie SSH aus.' },
+      { title: 'Fichier RevokedHostKeys illisible', summary: 'Un fichier RevokedHostKeys explicite manque, est illisible ou n’est pas un fichier normal.', why: 'OpenSSH refuse l’authentification de l’hôte pour chaque hôte concerné si ce fichier ne peut pas être lu.', fix: 'Indiquez un fichier KRL ou de clés révoquées existant et lisible. Utilisez RevokedHostKeys none uniquement pour désactiver volontairement ce contrôle. Exécutez la CLI avec le même compte que SSH.' },
+      { title: 'Archivo RevokedHostKeys ilegible', summary: 'Un archivo RevokedHostKeys explícito falta, no se puede leer o no es un archivo normal.', why: 'OpenSSH rechaza la autenticación del host para todos los hosts afectados si no puede leer este archivo.', fix: 'Apunta a un archivo KRL o de claves revocadas existente y legible. Usa RevokedHostKeys none solo si quieres desactivar esta comprobación. Ejecuta la CLI con la misma cuenta que usará SSH.' },
+    ),
+  },
+  {
+    slug: 'certificate-file-exists', code: 'MISSING_CERTIFICATE', severity: 'error', browser: false,
+    example: 'Host work\n  CertificateFile ~/.ssh/old-work-cert.pub',
+    fixedExample: 'Host work\n  CertificateFile ~/.ssh/id_ed25519-cert.pub',
+    highlights: [{ line: 2, target: '~/.ssh/old-work-cert.pub' }],
+    text: translations(
+      { title: 'CertificateFile not found', summary: 'An explicit SSH certificate path does not point to a readable regular file.', why: 'SSH cannot present a certificate that was moved, renamed, or deleted. Unlike IdentityFile, CertificateFile does not define none as a disabling sentinel.', fix: 'Point CertificateFile at the existing public certificate, commonly a file ending in -cert.pub, or remove the directive when no certificate is needed. Do not replace the path with none.' },
+      { title: 'CertificateFile nicht gefunden', summary: 'Ein expliziter SSH-Zertifikatspfad verweist nicht auf eine lesbare reguläre Datei.', why: 'SSH kann ein verschobenes, umbenanntes oder gelöschtes Zertifikat nicht vorlegen. Anders als IdentityFile kennt CertificateFile none nicht als Abschaltwert.', fix: 'Verweise auf das vorhandene öffentliche Zertifikat, meist eine Datei mit der Endung -cert.pub, oder entferne die Direktive, wenn kein Zertifikat benötigt wird. Ersetze den Pfad nicht durch none.' },
+      { title: 'CertificateFile introuvable', summary: 'Le chemin explicite du certificat SSH ne désigne pas un fichier normal lisible.', why: 'SSH ne peut pas présenter un certificat déplacé, renommé ou supprimé. Contrairement à IdentityFile, CertificateFile ne définit pas none comme valeur de désactivation.', fix: 'Indiquez le certificat public existant, souvent un fichier terminé par -cert.pub, ou supprimez la directive si aucun certificat n’est requis. Ne remplacez pas le chemin par none.' },
+      { title: 'CertificateFile no encontrado', summary: 'La ruta explícita del certificado SSH no apunta a un archivo normal legible.', why: 'SSH no puede presentar un certificado movido, renombrado o eliminado. A diferencia de IdentityFile, CertificateFile no define none como valor para desactivarlo.', fix: 'Apunta al certificado público existente, normalmente un archivo terminado en -cert.pub, o elimina la directiva si no necesitas certificado. No sustituyas la ruta por none.' },
+    ),
+  },
+  {
+    slug: 'local-command-enabled', code: 'LOCAL_COMMAND_DISABLED', severity: 'warning', browser: true,
+    example: 'Host production\n  LocalCommand logger connected-to-production',
+    fixedExample: 'Host production\n  PermitLocalCommand yes\n  LocalCommand logger connected-to-production',
+    highlights: [{ line: 2, target: 'LocalCommand logger connected-to-production' }],
+    text: translations(
+      { title: 'LocalCommand is not enabled', summary: 'A LocalCommand is configured while PermitLocalCommand is not enabled.', why: 'OpenSSH silently ignores LocalCommand unless execution is explicitly permitted. The expected local setup or notification never happens.', fix: 'Add PermitLocalCommand yes in an applicable scope only when you trust the command and configuration source. Otherwise remove LocalCommand. The linter stays conservative when an unresolved Include could enable it.' },
+      { title: 'LocalCommand ist nicht aktiviert', summary: 'Ein LocalCommand ist konfiguriert, obwohl PermitLocalCommand nicht aktiviert ist.', why: 'OpenSSH ignoriert LocalCommand still, solange die Ausführung nicht ausdrücklich erlaubt ist. Die erwartete lokale Aktion findet nie statt.', fix: 'Füge PermitLocalCommand yes nur in einem passenden Bereich hinzu, wenn du Befehl und Konfigurationsquelle vertraust. Andernfalls entferne LocalCommand. Bei einem nicht aufgelösten Include warnt der Linter bewusst nicht.' },
+      { title: 'LocalCommand n’est pas activé', summary: 'Un LocalCommand est configuré sans activation de PermitLocalCommand.', why: 'OpenSSH ignore silencieusement LocalCommand tant que son exécution n’est pas explicitement autorisée.', fix: 'Ajoutez PermitLocalCommand yes dans une portée applicable seulement si la commande et la source de configuration sont fiables. Sinon, supprimez LocalCommand. Le linter reste prudent face à un Include non résolu.' },
+      { title: 'LocalCommand no está habilitado', summary: 'Hay un LocalCommand configurado sin activar PermitLocalCommand.', why: 'OpenSSH ignora LocalCommand silenciosamente si la ejecución no está permitida de forma explícita.', fix: 'Añade PermitLocalCommand yes en un ámbito aplicable solo si confías en el comando y la configuración. Si no, elimina LocalCommand. El linter es prudente cuando un Include sin resolver podría habilitarlo.' },
+    ),
+  },
+  {
+    slug: 'invalid-percent-token', code: 'INVALID_TOKEN', severity: 'error', browser: true,
+    example: 'Host production\n  ProxyCommand ssh jump -W %C',
+    fixedExample: 'Host production\n  ProxyCommand ssh jump -W %h:%p',
+    highlights: [{ line: 2, target: '%C' }],
+    text: translations(
+      { title: 'Invalid percent token', summary: 'A directive uses a percent token that it does not support, or ends with an incomplete percent sign.', why: 'OpenSSH expands different token sets for different directives. A token valid in ControlPath can still make ProxyCommand invalid.', fix: 'Use only the tokens documented for that directive. ProxyCommand and ProxyJump accept %h, %n, %p, %r, and %%. Write %% when you need a literal percent sign.' },
+      { title: 'Ungültiges Prozent-Token', summary: 'Eine Direktive nutzt ein dort nicht unterstütztes Prozent-Token oder endet mit einem unvollständigen Prozentzeichen.', why: 'OpenSSH erlaubt je nach Direktive unterschiedliche Tokens. Ein gültiges ControlPath-Token kann ProxyCommand trotzdem ungültig machen.', fix: 'Nutze nur die für diese Direktive dokumentierten Tokens. ProxyCommand und ProxyJump akzeptieren %h, %n, %p, %r und %%. Für ein wörtliches Prozentzeichen schreibst du %%.' },
+      { title: 'Jeton de pourcentage invalide', summary: 'Une directive utilise un jeton non accepté ou se termine par un signe de pourcentage incomplet.', why: 'OpenSSH autorise des ensembles de jetons différents selon la directive. Un jeton valide dans ControlPath peut être invalide dans ProxyCommand.', fix: 'Utilisez uniquement les jetons documentés pour cette directive. ProxyCommand et ProxyJump acceptent %h, %n, %p, %r et %%. Écrivez %% pour un signe de pourcentage littéral.' },
+      { title: 'Token de porcentaje no válido', summary: 'Una directiva utiliza un token no compatible o termina con un signo de porcentaje incompleto.', why: 'OpenSSH permite conjuntos de tokens diferentes según la directiva. Un token válido en ControlPath puede ser inválido en ProxyCommand.', fix: 'Usa solo los tokens documentados para esa directiva. ProxyCommand y ProxyJump aceptan %h, %n, %p, %r y %%. Escribe %% para un signo de porcentaje literal.' },
+    ),
+  },
 ];
 
 export const ruleBySlug = (slug: string) => ruleDocs.find((rule) => rule.slug === slug);
