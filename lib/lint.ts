@@ -15,7 +15,8 @@ export type MessageKey =
   | 'invalidIntegerRange'
   | 'invalidTime'
   | 'invalidOctalMask'
-  | 'invalidIpQos';
+  | 'invalidIpQos'
+  | 'invalidEnum';
 
 export type Finding = {
   code: string;
@@ -172,6 +173,17 @@ const integerSpec = (directive: string, min: number, max: number): ValueSpec => 
   accepts: (arguments_) => acceptsIntegerRange(arguments_, min, max),
 });
 
+const enumSpec = (directive: string, values: string[]): ValueSpec => {
+  const accepted = new Set(values.map((value) => value.toLowerCase()));
+  return {
+    directive,
+    messageKey: 'invalidEnum',
+    data: { expected: values.join(', ') },
+    accepts: (arguments_) => arguments_.length === 1
+      && accepted.has(arguments_[0].toLowerCase()),
+  };
+};
+
 const valueSpecs: ValueSpec[] = [
   integerSpec('Port', 1, 65535),
   integerSpec('ConnectionAttempts', 1, 2147483647),
@@ -190,6 +202,18 @@ const valueSpecs: ValueSpec[] = [
   {
     directive: 'IPQoS', messageKey: 'invalidIpQos', accepts: acceptsIpQos,
   },
+  enumSpec('AddressFamily', ['any', 'inet', 'inet6']),
+  enumSpec('RequestTTY', ['true', 'false', 'yes', 'no', 'force', 'auto']),
+  enumSpec('SessionType', ['none', 'subsystem', 'default']),
+  enumSpec('ControlMaster', ['true', 'false', 'yes', 'no', 'auto', 'ask', 'autoask']),
+  enumSpec('CanonicalizeHostname', ['true', 'false', 'yes', 'no', 'always']),
+  enumSpec('StrictHostKeyChecking', ['true', 'false', 'yes', 'no', 'ask', 'off', 'accept-new']),
+  enumSpec('UpdateHostKeys', ['true', 'false', 'yes', 'no', 'ask']),
+  enumSpec('VerifyHostKeyDNS', ['true', 'false', 'yes', 'no', 'ask']),
+  enumSpec('Tunnel', ['ethernet', 'point-to-point', 'true', 'false', 'yes', 'no']),
+  enumSpec('LogLevel', ['QUIET', 'FATAL', 'ERROR', 'INFO', 'VERBOSE', 'DEBUG', 'DEBUG1', 'DEBUG2', 'DEBUG3']),
+  enumSpec('SyslogFacility', ['DAEMON', 'USER', 'AUTH', 'AUTHPRIV', 'LOCAL0', 'LOCAL1', 'LOCAL2', 'LOCAL3', 'LOCAL4', 'LOCAL5', 'LOCAL6', 'LOCAL7']),
+  enumSpec('PubkeyAuthentication', ['true', 'false', 'yes', 'no', 'unbound', 'host-bound']),
 ];
 
 const stripComment = (line: string) => {

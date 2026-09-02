@@ -110,7 +110,7 @@ export const copy: Record<Locale, Copy> = {
     checksIntro: 'The browser checks the OpenSSH rules that only need your configuration text. Each finding explains the problem and points back to the relevant line.',
     allRules: 'View all 12 rule guides',
     rules: [
-      { code: 'INVALID_VALUE', title: 'Invalid values', text: 'Checks ports, counters, durations, octal masks, and IPQoS values.' },
+      { code: 'INVALID_VALUE', title: 'Invalid values', text: 'Checks ports, counters, durations, masks, DSCP values, and documented option names.' },
       { code: 'DUP_HOST', title: 'Duplicate hosts', text: 'Finds repeated Host patterns that make a config harder to reason about.' },
       { code: 'WILDCARD_ORDER', title: 'Wildcard ordering', text: 'Warns when a specific host appears after Host * and may inherit unexpected values.' },
       { code: 'INSECURE_OPT', title: 'Unsafe options', text: 'Flags disabled host verification and broad agent or X11 forwarding.' },
@@ -163,6 +163,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: "{directive} has the invalid time value '{target}'.",
       invalidOctalMask: "StreamLocalBindMask has the invalid octal value '{target}'.",
       invalidIpQos: "IPQoS has the invalid value '{target}'.",
+      invalidEnum: "{directive} has the invalid value '{target}'. Expected one of: {expected}.",
     },
     findingHints: {
       duplicateHost: 'Remove or consolidate one of the duplicate blocks.',
@@ -180,6 +181,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: 'Use seconds, a duration such as 1m30s, or none.',
       invalidOctalMask: 'Use a complete octal value from 0000 to 0777, for example 0177.',
       invalidIpQos: 'Use one or two DSCP names, numbers from 0 to 255, or none.',
+      invalidEnum: 'Use one of the listed OpenSSH values.',
     },
   },
   de: {
@@ -204,7 +206,7 @@ export const copy: Record<Locale, Copy> = {
     checksIntro: 'Der Browser prüft alle OpenSSH-Regeln, die nur den Konfigurationstext benötigen. Jeder Fund erklärt das Problem und führt zurück zur betroffenen Zeile.',
     allRules: 'Alle 12 Regelbeschreibungen ansehen',
     rules: [
-      { code: 'INVALID_VALUE', title: 'Ungültige Werte', text: 'Prüft Ports, Zähler, Zeitangaben, Oktalmasken und IPQoS-Werte.' },
+      { code: 'INVALID_VALUE', title: 'Ungültige Werte', text: 'Prüft Ports, Zähler, Zeitangaben, Masken, DSCP-Werte und dokumentierte Optionswerte.' },
       { code: 'DUP_HOST', title: 'Doppelte Hosts', text: 'Findet wiederholte Host-Muster, die eine Konfiguration schwer verständlich machen.' },
       { code: 'WILDCARD_ORDER', title: 'Wildcard-Reihenfolge', text: 'Warnt, wenn ein konkreter Host nach Host * steht und unerwartete Werte erben kann.' },
       { code: 'INSECURE_OPT', title: 'Unsichere Optionen', text: 'Markiert deaktivierte Host-Prüfungen sowie zu breites Agent- oder X11-Forwarding.' },
@@ -243,6 +245,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: "{directive} hat den ungültigen Zeitwert '{target}'.",
       invalidOctalMask: "StreamLocalBindMask hat den ungültigen Oktalwert '{target}'.",
       invalidIpQos: "IPQoS hat den ungültigen Wert '{target}'.",
+      invalidEnum: "{directive} hat den ungültigen Wert '{target}'. Erlaubt sind: {expected}.",
     },
     findingHints: {
       duplicateHost: 'Entferne oder verbinde einen der doppelten Blöcke.', wildcardOrder: 'Verschiebe Host * ans Ende, sofern die Reihenfolge nicht beabsichtigt ist.',
@@ -254,6 +257,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: 'Verwende Sekunden, eine Dauer wie 1m30s oder none.',
       invalidOctalMask: 'Verwende einen vollständigen Oktalwert von 0000 bis 0777, zum Beispiel 0177.',
       invalidIpQos: 'Verwende ein oder zwei DSCP-Namen, Zahlen von 0 bis 255 oder none.',
+      invalidEnum: 'Verwende einen der aufgeführten OpenSSH-Werte.',
     },
   },
   fr: {
@@ -271,7 +275,7 @@ export const copy: Record<Locale, Copy> = {
     checksEyebrow: 'LA PARTIE UTILE', checksTitle: 'Ce que vérifie ce linter de configuration SSH.', checksIntro: 'Le navigateur vérifie les règles OpenSSH qui nécessitent uniquement le texte de configuration. Chaque résultat explique le problème et renvoie à la ligne concernée.',
     allRules: 'Voir les 12 guides de règles',
     rules: [
-      { code: 'INVALID_VALUE', title: 'Valeurs invalides', text: 'Vérifie les ports, compteurs, durées, masques octaux et valeurs IPQoS.' },
+      { code: 'INVALID_VALUE', title: 'Valeurs invalides', text: 'Vérifie les ports, compteurs, durées, masques, valeurs DSCP et options documentées.' },
       { code: 'DUP_HOST', title: 'Hôtes dupliqués', text: 'Repère les motifs Host répétés qui rendent la configuration difficile à comprendre.' },
       { code: 'WILDCARD_ORDER', title: 'Ordre des jokers', text: 'Avertit lorsqu’un hôte précis apparaît après Host *.' },
       { code: 'INSECURE_OPT', title: 'Options risquées', text: 'Signale la vérification désactivée et les redirections trop larges.' },
@@ -301,6 +305,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: "{directive} contient la durée invalide '{target}'.",
       invalidOctalMask: "StreamLocalBindMask contient la valeur octale invalide '{target}'.",
       invalidIpQos: "IPQoS contient la valeur invalide '{target}'.",
+      invalidEnum: "{directive} contient la valeur invalide '{target}'. Valeurs admises : {expected}.",
     },
     findingHints: {
       duplicateHost: 'Supprimez ou regroupez un des blocs.', wildcardOrder: 'Placez Host * à la fin si cet ordre n’est pas intentionnel.', weakAlgorithm: 'Utilisez un algorithme moderne.',
@@ -311,6 +316,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: 'Utilisez des secondes, une durée comme 1m30s ou none.',
       invalidOctalMask: 'Utilisez une valeur octale complète de 0000 à 0777, par exemple 0177.',
       invalidIpQos: 'Utilisez un ou deux noms DSCP, des nombres de 0 à 255 ou none.',
+      invalidEnum: 'Utilisez une des valeurs OpenSSH indiquées.',
     },
   },
   es: {
@@ -328,7 +334,7 @@ export const copy: Record<Locale, Copy> = {
     checksEyebrow: 'LA PARTE ÚTIL', checksTitle: 'Qué comprueba este linter de configuración SSH.', checksIntro: 'El navegador comprueba las reglas de OpenSSH que solo necesitan el texto de configuración. Cada resultado explica el problema y enlaza con su línea.',
     allRules: 'Ver las 12 guías de reglas',
     rules: [
-      { code: 'INVALID_VALUE', title: 'Valores no válidos', text: 'Comprueba puertos, contadores, duraciones, máscaras octales y valores IPQoS.' },
+      { code: 'INVALID_VALUE', title: 'Valores no válidos', text: 'Comprueba puertos, contadores, duraciones, máscaras, valores DSCP y opciones documentadas.' },
       { code: 'DUP_HOST', title: 'Hosts duplicados', text: 'Encuentra patrones Host repetidos que dificultan entender la configuración.' },
       { code: 'WILDCARD_ORDER', title: 'Orden de comodines', text: 'Avisa si un host específico aparece después de Host *.' },
       { code: 'INSECURE_OPT', title: 'Opciones inseguras', text: 'Marca la verificación desactivada y el reenvío demasiado amplio.' },
@@ -358,6 +364,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: "{directive} tiene el valor de tiempo no válido '{target}'.",
       invalidOctalMask: "StreamLocalBindMask tiene el valor octal no válido '{target}'.",
       invalidIpQos: "IPQoS tiene el valor no válido '{target}'.",
+      invalidEnum: "{directive} tiene el valor no válido '{target}'. Valores permitidos: {expected}.",
     },
     findingHints: {
       duplicateHost: 'Elimina o combina uno de los bloques.', wildcardOrder: 'Mueve Host * al final si el orden no es intencionado.', weakAlgorithm: 'Usa un algoritmo moderno.',
@@ -368,6 +375,7 @@ export const copy: Record<Locale, Copy> = {
       invalidTime: 'Usa segundos, una duración como 1m30s o none.',
       invalidOctalMask: 'Usa un valor octal completo entre 0000 y 0777, por ejemplo 0177.',
       invalidIpQos: 'Usa uno o dos nombres DSCP, números del 0 al 255 o none.',
+      invalidEnum: 'Usa uno de los valores OpenSSH indicados.',
     },
   },
 };
