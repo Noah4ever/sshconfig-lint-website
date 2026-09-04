@@ -893,9 +893,11 @@ h1 {
   .rule-grid { grid-template-columns: 1fr; margin-top: 48px; }
   .rule:nth-child(n) { padding-left: 0; padding-right: 0; }
   .comparison { gap: 38px; grid-template-columns: 1fr; margin-top: 48px; }
-  .install-block { grid-template-columns: 1fr; margin-top: 55px; padding: 22px; }
+  .install-block { grid-template-columns: minmax(0, 1fr); margin-top: 55px; min-width: 0; padding: 22px; }
+  .install-chooser, .install-command { min-width: 0; }
   .install-link { grid-column: 1; grid-row: auto; }
-  .install-tabs { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .install-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .install-tabs button + button { border-left: 2px solid $ink; }
   .install-tabs button { justify-content: center; padding: 8px; }
   .install-command { align-items: stretch; flex-direction: column; }
   .install-command button { justify-content: center; min-height: 48px; }

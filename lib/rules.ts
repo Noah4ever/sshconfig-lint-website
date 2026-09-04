@@ -251,6 +251,78 @@ export const ruleDocs: RuleDoc[] = [
       { title: 'Token de porcentaje no válido', summary: 'Una directiva utiliza un token no compatible o termina con un signo de porcentaje incompleto.', why: 'OpenSSH permite conjuntos de tokens diferentes según la directiva. Un token válido en ControlPath puede ser inválido en ProxyCommand.', fix: 'Usa solo los tokens documentados para esa directiva. ProxyCommand y ProxyJump aceptan %h, %n, %p, %r y %%. Escribe %% para un signo de porcentaje literal.' },
     ),
   },
+  {
+    slug: 'invalid-syntax', code: 'INVALID_SYNTAX', severity: 'error', browser: true,
+    example: 'Host work\n  User "alice',
+    fixedExample: 'Host work\n  User alice',
+    highlights: [{ line: 2, target: '"alice' }],
+    text: translations(
+      { title: 'Invalid SSH config syntax', summary: 'A directive has no argument, an empty argument, or an unclosed quote.', why: 'OpenSSH rejects the configuration before it can evaluate any host settings.', fix: 'Add the required argument and close each single or double quote on the same line. Then run ssh -G work to confirm that OpenSSH can parse the file.' },
+      { title: 'Ungültige SSH-Config-Syntax', summary: 'Bei einer Direktive fehlt der Wert, er ist leer oder ein Anführungszeichen ist nicht geschlossen.', why: 'OpenSSH lehnt die Konfiguration ab, bevor Host-Einstellungen ausgewertet werden.', fix: 'Füge den benötigten Wert ein und schließe jedes einfache oder doppelte Anführungszeichen in derselben Zeile. Prüfe die Datei danach mit ssh -G work.' },
+      { title: 'Syntaxe de configuration SSH invalide', summary: 'Une directive n’a pas d’argument, contient un argument vide ou des guillemets non fermés.', why: 'OpenSSH refuse la configuration avant d’évaluer les paramètres des hôtes.', fix: 'Ajoutez l’argument requis et fermez chaque guillemet sur la même ligne. Vérifiez ensuite avec ssh -G work.' },
+      { title: 'Sintaxis de configuración SSH no válida', summary: 'Una directiva no tiene argumento, tiene uno vacío o contiene comillas sin cerrar.', why: 'OpenSSH rechaza la configuración antes de evaluar los ajustes de los hosts.', fix: 'Añade el argumento necesario y cierra cada comilla en la misma línea. Comprueba después con ssh -G work.' },
+    ),
+  },
+  {
+    slug: 'unknown-directive', code: 'UNKNOWN_DIRECTIVE', severity: 'error', browser: true,
+    example: 'Host work\n  IdentitFile ~/.ssh/id_ed25519',
+    fixedExample: 'Host work\n  IdentityFile ~/.ssh/id_ed25519',
+    highlights: [{ line: 2, target: 'IdentitFile' }],
+    text: translations(
+      { title: 'Unknown SSH directive', summary: 'An option name is not recognised by current OpenSSH.', why: 'A small spelling error can stop SSH from loading the whole configuration.', fix: 'Use the suggested OpenSSH option name. For a real platform-specific extension, place a matching IgnoreUnknown directive before the option.' },
+      { title: 'Unbekannte SSH-Direktive', summary: 'Ein Optionsname wird vom aktuellen OpenSSH nicht erkannt.', why: 'Ein kleiner Schreibfehler kann verhindern, dass SSH die gesamte Konfiguration lädt.', fix: 'Nutze den vorgeschlagenen OpenSSH-Optionsnamen. Bei einer echten plattformspezifischen Erweiterung muss vorher ein passendes IgnoreUnknown stehen.' },
+      { title: 'Directive SSH inconnue', summary: 'Un nom d’option n’est pas reconnu par la version actuelle d’OpenSSH.', why: 'Une simple faute peut empêcher SSH de charger toute la configuration.', fix: 'Utilisez le nom OpenSSH proposé. Pour une véritable extension de plateforme, placez un IgnoreUnknown correspondant avant l’option.' },
+      { title: 'Directiva SSH desconocida', summary: 'La versión actual de OpenSSH no reconoce el nombre de una opción.', why: 'Un pequeño error puede impedir que SSH cargue toda la configuración.', fix: 'Usa el nombre de opción sugerido. Para una extensión real de plataforma, coloca antes un IgnoreUnknown adecuado.' },
+    ),
+  },
+  {
+    slug: 'deprecated-option', code: 'DEPRECATED_OPTION', severity: 'warning', browser: true,
+    example: 'Host legacy\n  KeepAlive yes\n  PubkeyAcceptedKeyTypes ssh-ed25519',
+    fixedExample: 'Host legacy\n  TCPKeepAlive yes\n  PubkeyAcceptedAlgorithms ssh-ed25519',
+    highlights: [{ line: 2, target: 'KeepAlive' }, { line: 3, target: 'PubkeyAcceptedKeyTypes' }],
+    text: translations(
+      { title: 'Deprecated or obsolete option', summary: 'The configuration uses an old alias or an option that OpenSSH now ignores.', why: 'Ignored settings create false confidence, while old aliases make the file harder to understand and maintain.', fix: 'Replace an old alias with the current option shown by the linter. Remove options such as Protocol that no longer change current OpenSSH behavior.' },
+      { title: 'Veraltete oder wirkungslose Option', summary: 'Die Konfiguration nutzt einen alten Alias oder eine Option, die OpenSSH inzwischen ignoriert.', why: 'Ignorierte Einstellungen vermitteln falsche Sicherheit. Alte Namen erschweren Wartung und Verständnis.', fix: 'Ersetze alte Aliase durch die vom Linter genannte aktuelle Option. Entferne Optionen wie Protocol, die das heutige OpenSSH nicht mehr verändern.' },
+      { title: 'Option obsolète', summary: 'La configuration utilise un ancien alias ou une option désormais ignorée par OpenSSH.', why: 'Une option ignorée donne une fausse impression de sécurité et les anciens noms compliquent la maintenance.', fix: 'Remplacez les anciens alias par l’option actuelle indiquée. Supprimez les options comme Protocol qui n’ont plus d’effet.' },
+      { title: 'Opción obsoleta', summary: 'La configuración usa un alias antiguo o una opción que OpenSSH ya ignora.', why: 'Los ajustes ignorados crean una falsa confianza y los nombres antiguos dificultan el mantenimiento.', fix: 'Sustituye los alias antiguos por la opción actual indicada. Elimina opciones como Protocol que ya no tienen efecto.' },
+    ),
+  },
+  {
+    slug: 'control-persist-requires-master', code: 'CONTROL_PERSIST_UNUSED', severity: 'warning', browser: true,
+    example: 'Host work\n  ControlPersist 10m',
+    fixedExample: 'Host work\n  ControlMaster auto\n  ControlPersist 10m',
+    highlights: [{ line: 2, target: 'ControlPersist 10m' }],
+    text: translations(
+      { title: 'ControlPersist without ControlMaster', summary: 'Connection persistence is enabled, but no setting can create a multiplexed master connection.', why: 'ControlPersist only works together with ControlMaster, so the configured duration otherwise has no effect.', fix: 'Add ControlMaster auto in an applicable scope, or remove ControlPersist if connection sharing is not wanted. An unresolved Include suppresses this warning because it may enable ControlMaster.' },
+      { title: 'ControlPersist ohne ControlMaster', summary: 'Eine dauerhafte Verbindung ist konfiguriert, aber keine Einstellung kann eine Master-Verbindung erzeugen.', why: 'ControlPersist funktioniert nur zusammen mit ControlMaster. Ohne diese Option bleibt die Dauer wirkungslos.', fix: 'Füge ControlMaster auto in einem passenden Bereich hinzu oder entferne ControlPersist. Bei einem nicht aufgelösten Include warnt der Linter bewusst nicht.' },
+      { title: 'ControlPersist sans ControlMaster', summary: 'La persistance est activée, mais aucun réglage ne peut créer une connexion maître multiplexée.', why: 'ControlPersist fonctionne uniquement avec ControlMaster. La durée configurée reste sinon sans effet.', fix: 'Ajoutez ControlMaster auto dans une portée applicable ou supprimez ControlPersist. Un Include non résolu désactive volontairement cet avertissement.' },
+      { title: 'ControlPersist sin ControlMaster', summary: 'La persistencia está activada, pero ningún ajuste puede crear una conexión maestra multiplexada.', why: 'ControlPersist solo funciona junto con ControlMaster. Sin él, la duración no tiene efecto.', fix: 'Añade ControlMaster auto en un ámbito aplicable o elimina ControlPersist. Un Include sin resolver evita este aviso de forma intencionada.' },
+    ),
+  },
+  {
+    slug: 'update-hostkeys-control-persist', code: 'UPDATE_HOSTKEYS_ASK_PERSIST', severity: 'warning', browser: true,
+    example: 'Host work\n  ControlMaster auto\n  ControlPersist 10m\n  UpdateHostKeys ask',
+    fixedExample: 'Host work\n  ControlMaster auto\n  ControlPersist 10m\n  UpdateHostKeys yes',
+    highlights: [{ line: 3, target: 'ControlPersist 10m' }, { line: 4, target: 'UpdateHostKeys ask' }],
+    text: translations(
+      { title: 'UpdateHostKeys ask with ControlPersist', summary: 'Interactive host-key confirmation is combined with a persistent multiplexed connection.', why: 'OpenSSH cannot ask for confirmation in this mode and disables UpdateHostKeys confirmation.', fix: 'Use UpdateHostKeys yes when automatic updates are acceptable, or disable ControlPersist in this scope when confirmation is required.' },
+      { title: 'UpdateHostKeys ask mit ControlPersist', summary: 'Interaktive Host-Key-Bestätigung wird mit einer dauerhaften Multiplex-Verbindung kombiniert.', why: 'OpenSSH kann in diesem Modus nicht nachfragen und deaktiviert die Bestätigung von UpdateHostKeys.', fix: 'Nutze UpdateHostKeys yes für automatische Aktualisierungen oder deaktiviere ControlPersist in diesem Bereich, wenn eine Bestätigung nötig ist.' },
+      { title: 'UpdateHostKeys ask avec ControlPersist', summary: 'La confirmation interactive des clés est combinée avec une connexion multiplexée persistante.', why: 'OpenSSH ne peut pas demander de confirmation dans ce mode et désactive cette confirmation.', fix: 'Utilisez UpdateHostKeys yes pour les mises à jour automatiques ou désactivez ControlPersist lorsque la confirmation est nécessaire.' },
+      { title: 'UpdateHostKeys ask con ControlPersist', summary: 'La confirmación interactiva de claves se combina con una conexión multiplexada persistente.', why: 'OpenSSH no puede pedir confirmación en este modo y desactiva esa confirmación.', fix: 'Usa UpdateHostKeys yes para actualizaciones automáticas o desactiva ControlPersist cuando necesites confirmación.' },
+    ),
+  },
+  {
+    slug: 'invalid-match-condition', code: 'INVALID_MATCH', severity: 'error', browser: true,
+    example: 'Match host\n  User deploy',
+    fixedExample: 'Match host internal.example.com\n  User deploy',
+    highlights: [{ line: 1, target: 'Match host' }],
+    text: translations(
+      { title: 'Invalid Match condition', summary: 'A Match criterion is unknown, lacks its required value, or combines all with another condition.', why: 'OpenSSH rejects a malformed Match line and stops loading the configuration.', fix: 'Use a supported criterion such as host, user, localuser, exec, tagged, or canonical. Provide its value and keep Match all in its own block.' },
+      { title: 'Ungültige Match-Bedingung', summary: 'Eine Match-Bedingung ist unbekannt, hat keinen benötigten Wert oder kombiniert all mit einer weiteren Bedingung.', why: 'OpenSSH lehnt eine fehlerhafte Match-Zeile ab und lädt die Konfiguration nicht weiter.', fix: 'Nutze eine unterstützte Bedingung wie host, user, localuser, exec, tagged oder canonical. Gib den benötigten Wert an und verwende Match all allein.' },
+      { title: 'Condition Match invalide', summary: 'Un critère Match est inconnu, n’a pas sa valeur requise ou combine all avec une autre condition.', why: 'OpenSSH refuse une ligne Match incorrecte et arrête de charger la configuration.', fix: 'Utilisez un critère pris en charge comme host, user, localuser, exec, tagged ou canonical. Ajoutez sa valeur et gardez Match all seul.' },
+      { title: 'Condición Match no válida', summary: 'Un criterio Match es desconocido, no tiene el valor necesario o combina all con otra condición.', why: 'OpenSSH rechaza una línea Match incorrecta y deja de cargar la configuración.', fix: 'Usa un criterio compatible como host, user, localuser, exec, tagged o canonical. Añade su valor y deja Match all solo.' },
+    ),
+  },
 ];
 
 export const ruleBySlug = (slug: string) => ruleDocs.find((rule) => rule.slug === slug);

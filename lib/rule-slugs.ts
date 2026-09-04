@@ -18,4 +18,10 @@ export const ruleSlugByCode: Record<string, string> = {
   UNSAFE_CTRL_PATH: 'unsafe-control-path',
   WEAK_ALGO: 'deprecated-weak-algorithms',
   WILDCARD_ORDER: 'wildcard-host-order',
+  UNKNOWN_DIRECTIVE: 'unknown-directive',
+  DEPRECATED_OPTION: 'deprecated-option',
+  CONTROL_PERSIST_UNUSED: 'control-persist-requires-master',
+  UPDATE_HOSTKEYS_ASK_PERSIST: 'update-hostkeys-control-persist',
+  INVALID_SYNTAX: 'invalid-syntax',
+  INVALID_MATCH: 'invalid-match-condition',
 };
